@@ -1,5 +1,7 @@
 # Agent Mulder Revival
 
+![Build Status Badge](https://mar3ek.visualstudio.com/_apis/public/build/definitions/cad5fc04-7859-40e5-be11-2890d454b575/4/badge)
+
 Welcome to the ERNI Community fork of Agent Mudler! We love DI and we love Agent Mulder, so the news of its untimely death ware saddening to us. Fortunately for us, we managed to organize a few people interested in the project and started preparing our resurrection spells.
 
 It is with great pleasure that i give you **Agent Mulder Revival**.

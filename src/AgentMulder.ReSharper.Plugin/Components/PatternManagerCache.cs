@@ -1,6 +1,4 @@
-﻿using System;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using JetBrains.Application.Progress;
@@ -127,37 +125,37 @@ namespace AgentMulder.ReSharper.Plugin.Components
 
         void ICache.OnPsiChange(ITreeNode elementContainingChanges, PsiChangedElementType type)
         {
-          if (type == PsiChangedElementType.Whitespaces)
-            return;
+            var sourceFile = elementContainingChanges?.GetSourceFile();
+            if (sourceFile == null)
+            {
+                return;
+            }
 
-          if (elementContainingChanges == null)
-            return;
-
-          var sourceFile = elementContainingChanges.GetSourceFile();
-          if (sourceFile == null) return;
-
-          lock (lockObject)
-          {
-            dirtyFiles.Add(sourceFile);
-          }
+            lock (lockObject)
+            {
+                dirtyFiles.Add(sourceFile);
+            }
         }
 
         void ICache.OnDocumentChange(IPsiSourceFile sourceFile, ProjectFileDocumentCopyChange change)
         {
             MarkAsDirty(sourceFile);
-
         }
 
         void ICache.SyncUpdate(bool underTransaction)
-        {
-          lock (lockObject)
-          {
-            foreach (var psiSourceFile in dirtyFiles)
+        {     
+            lock (lockObject)
             {
-              registrationsMap.RemoveKey(psiSourceFile);
-            }
-            dirtyFiles.Clear();
-          }
+                if (HasDirtyFiles)
+                {
+                    foreach (var psiSourceFile in dirtyFiles)
+                    {
+                        ((ICache)this).Merge(psiSourceFile, ProcessSourceFile(psiSourceFile));
+                    }
+
+                    dirtyFiles.Clear();
+                }
+            }      
         }
 
         bool ICache.UpToDate(IPsiSourceFile sourceFile)
@@ -187,6 +185,19 @@ namespace AgentMulder.ReSharper.Plugin.Components
 
             ProjectFileType languageType = sourceFile.LanguageType;
             return !languageType.IsNullOrUnknown() && projectFileTypeCoordinator.TryGetService(languageType) != null;
+        }
+
+        public IEnumerable<RegistrationInfo> GetAllRegistrations()
+        {
+            if (HasDirtyFiles)
+            {
+                ((ICache)this).SyncUpdate(false);
+            }
+
+            lock (lockObject)
+            {
+                return registrationsMap.Values;
+            }
         }
     }
 }

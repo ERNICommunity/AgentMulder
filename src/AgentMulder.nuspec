@@ -1,27 +1,27 @@
 <?xml version="1.0"?>
 <package>
   <metadata>
-    <id>$PackageId$</id>
+    <id>ERNI.AgentMulder</id>
     <version>$version$</version>
-    <authors>Igal Tabachnik</authors>
-    <owners>Igal Tabachnik</owners>
+    <authors>ERNI Community</authors>
+    <owners>ERNI Community</owners>
     <title>Agent Mulder plugin for ReSharper</title>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <licenseUrl>https://raw.github.com/hmemcpy/AgentMulder/master/License.txt</licenseUrl>
+    <licenseUrl>https://raw.githubusercontent.com/ERNICommunity/AgentMulder/master/License.txt</licenseUrl>
     <description>Provides navigation to and finding usages of types registered or resolved via Dependency Injection (DI) containers.</description>
-    <projectUrl>http://hmemcpy.github.io/AgentMulder/</projectUrl>
+    <projectUrl>https://github.com/ERNICommunity/AgentMulder</projectUrl>
     <copyright>Copyright &#x00A9; 2012-2016 Igal Tabachnik</copyright>
-    <iconUrl>https://raw.github.com/hmemcpy/AgentMulder/master/logo.png</iconUrl>
+    <iconUrl>https://raw.githubusercontent.com/ERNICommunity/AgentMulder/master/logo.png</iconUrl>
     <releaseNotes>
-&#8226; Adding support for ReSharper 2016.1
+&#8226; Adding support for ReSharper 2016.3
     </releaseNotes>
     <tags>resharper agent mulder agentmulder ioc di windsor castle autofac ninject structuremap unity simpleinjector</tags>
     <dependencies>
-      <dependency id="$ReSharperDep$" version="$ReSharperVer$"/>
+      <dependency id="Wave" version="$waveVersion$"/>
     </dependencies>
   </metadata>
   <files>
-    <file src="..\output\$configuration$\10.0\**\AgentMulder.*.dll" target="dotFiles\" />
-    <file src="..\output\$configuration$\10.0\**\AgentMulder.*.pdb" target="dotFiles\" />    
+    <file src="..\output\$config$\**\AgentMulder.*.dll" target="dotFiles\" />
+    <file src="..\output\$config$\**\AgentMulder.*.pdb" target="dotFiles\" />    
   </files>
 </package>

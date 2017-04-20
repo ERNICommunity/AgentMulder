@@ -68,7 +68,7 @@ namespace AgentMulder.ReSharper.Plugin.Components
         private IContainerInfo GetMatchingContainer(IPsiSourceFile sourceFile)
         {
             return knownContainers.FirstOrDefault(knownContainer => 
-                knownContainer.ContainerQualifiedNames.Any(s => wordIndex.CanContainWord(sourceFile, s)));
+                knownContainer.ContainerQualifiedNames.Any(s => wordIndex.CanContainAllSubwords(sourceFile, s)));
         }
 
         private IEnumerable<RegistrationInfo> ScanRegistrations(IContainerInfo containerInfo, ISearchDomain searchDomain)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AgentMulder.ReSharper.Domain.Registrations;
@@ -13,7 +14,7 @@ namespace AgentMulder.ReSharper.Domain.Patterns
     public abstract class RegistrationPatternBase : IRegistrationPattern
     {
         private readonly IStructuralSearchPattern pattern;
-        private readonly IStructuralMatcher matcher;
+        private readonly Lazy<IStructuralMatcher> matcher;
 
         IStructuralSearchPattern IStructuralPatternHolder.Pattern
         {
@@ -22,7 +23,7 @@ namespace AgentMulder.ReSharper.Domain.Patterns
 
         IStructuralMatcher IStructuralPatternHolder.Matcher
         {
-            get { return matcher; }
+            get { return matcher.Value; }
         }
 
         public PsiLanguageType Language
@@ -34,7 +35,7 @@ namespace AgentMulder.ReSharper.Domain.Patterns
         {
             this.pattern = pattern;
 
-            matcher = pattern.CreateMatcher();
+            matcher = new Lazy<IStructuralMatcher>(this.pattern.CreateMatcher);
         }
 
         private IInvocationExpression GetMatchedExpression(ITreeNode element)
@@ -50,7 +51,7 @@ namespace AgentMulder.ReSharper.Domain.Patterns
                 return EmptyList<IInvocationExpression>.InstanceList;
             }
 
-            return invocationExpression.GetAllExpressions().Where(expression => matcher.QuickMatch(expression));
+            return invocationExpression.GetAllExpressions().Where(expression => matcher.Value.QuickMatch(expression));
         }
 
         protected IStructuralMatchResult Match(ITreeNode treeNode)
@@ -58,15 +59,15 @@ namespace AgentMulder.ReSharper.Domain.Patterns
             IInvocationExpression expression = GetMatchedExpression(treeNode);
             if (expression == null)
             {
-                return matcher.Match(treeNode);
+                return matcher.Value.Match(treeNode);
             }
 
-            return matcher.Match(expression);
+            return matcher.Value.Match(expression);
         }
 
         protected IEnumerable<IStructuralMatchResult> MatchMany(ITreeNode treeNode)
         {
-            return GetAllMatchedExpressions(treeNode).Select(expression => matcher.Match(expression));
+            return GetAllMatchedExpressions(treeNode).Select(expression => matcher.Value.Match(expression));
         }
 
         public abstract IEnumerable<IComponentRegistration> GetComponentRegistrations(ITreeNode registrationRootElement);

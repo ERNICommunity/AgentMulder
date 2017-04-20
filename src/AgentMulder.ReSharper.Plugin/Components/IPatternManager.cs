@@ -6,5 +6,6 @@ namespace AgentMulder.ReSharper.Plugin.Components
     public interface IPatternManager
     {
         IEnumerable<RegistrationInfo> GetRegistrationsForFile(IPsiSourceFile sourceFile);
+        IEnumerable<RegistrationInfo> GetAllRegistrations();
     }
 }

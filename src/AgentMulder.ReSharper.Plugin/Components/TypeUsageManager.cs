@@ -25,16 +25,16 @@ namespace AgentMulder.ReSharper.Plugin.Components
 
         public void MarkTypeAsUsed(ITypeDeclaration declaration)
         {
-            //ITypeElement element = declaration.DeclaredElement;
+            ITypeElement element = declaration.DeclaredElement;
 
-            //UsageState mask = UsageState.USED_MASK |
-            //                  UsageState.CANNOT_BE_PRIVATE |
-            //                  UsageState.CANNOT_BE_INTERNAL |
-            //                  UsageState.CANNOT_BE_PROTECTED;
+            UsageState mask = UsageState.USED_MASK |
+                              UsageState.CANNOT_BE_PRIVATE |
+                              UsageState.CANNOT_BE_INTERNAL |
+                              UsageState.CANNOT_BE_PROTECTED;
 
-            //SetConstructorsState(element, mask);
+            SetConstructorsState(element, mask);
 
-            //collectUsagesStageProcess.SetElementState(element, UsageState.ACCESSED);
+            collectUsagesStageProcess.SetElementState(element, UsageState.ACCESSED);
         }
 
         private void SetConstructorsState(ITypeElement typeElement, UsageState state)
