@@ -18,7 +18,7 @@ using NUnit.Framework;
 
 namespace AgentMulder.ReSharper.Tests
 {
-    [TestNetFramework45]
+    [TestNetFramework46]
     [TestFileExtension(".cs")]
     public abstract class AgentMulderTestBase<TContainerInfo> : BaseTestWithSingleProject
         where TContainerInfo : IContainerInfo, new()
@@ -26,11 +26,9 @@ namespace AgentMulder.ReSharper.Tests
         private static readonly Regex patternCountRegex = new Regex(@"// Patterns: (?<patterns>\d+)");
         private static readonly Regex matchesRegex      = new Regex(@"// Matches: (?<files>.*?)\r?\n");
         private static readonly Regex notMatchesRegex   = new Regex(@"// NotMatches: (?<files>.*?)\r?\n");
+        private IContainerInfo containerInfo;
 
-        protected virtual IContainerInfo ContainerInfo
-        {
-            get { return new TContainerInfo(); }
-        }
+        protected virtual IContainerInfo ContainerInfo => containerInfo ?? (containerInfo = new TContainerInfo());
 
         private void RunTest(string fileName, Action<IPatternManager> action)
         {
@@ -38,11 +36,12 @@ namespace AgentMulder.ReSharper.Tests
             var fileSet = typesPath.GetFiles("*" + Extension)
                                    .SelectNotNull(fs => fs.FullName)
                                    .Concat(new[] { Path.Combine(SolutionItemsBasePath.FullPath, fileName) });
-
+            ContainerInfo.RemovePlaceholderTypes();
             RunFixture(fileSet, () => { 
                 var solutionAnalyzer = Solution.GetComponent<SolutionAnalyzer>();
                 solutionAnalyzer.KnownContainers.Clear();
                 solutionAnalyzer.KnownContainers.Add(ContainerInfo);
+                // ContainerInfo.RemovePlaceholderTypes(); // note: uncomment to run patterns without type specification
 
                 var patternManager = Solution.GetComponent<IPatternManager>();
 
@@ -89,7 +88,8 @@ namespace AgentMulder.ReSharper.Tests
         {
             RunTest(fileName, patternManager =>
             {
-                ICSharpFile cSharpFile = GetCodeFile(Project, fileName);
+                var project = Solution.GetProjectByName("TestProject");
+                ICSharpFile cSharpFile = GetCodeFile(project, fileName);
                 var testData = GetTestData(cSharpFile);
 
                 var patterns = patternManager.GetRegistrationsForFile(cSharpFile.GetSourceFile()).ToList();
@@ -102,7 +102,7 @@ namespace AgentMulder.ReSharper.Tests
                     // todo refactor this. This should be a set operation.
 
                     // checks matching files
-                    foreach (ICSharpFile codeFile in testData.Item2.SelectNotNull(f => GetCodeFile(Project, f)))
+                    foreach (ICSharpFile codeFile in testData.Item2.SelectNotNull(f => GetCodeFile(project, f)))
                     {
                         codeFile.ProcessChildren<ITypeDeclaration>(declaration =>
                         Assert.That(patterns.Any(r => r.Registration.IsSatisfiedBy(declaration.DeclaredElement)),
@@ -110,7 +110,7 @@ namespace AgentMulder.ReSharper.Tests
                     }
 
                     // checks non-matching files
-                    foreach (ICSharpFile codeFile in testData.Item3.SelectNotNull(f => GetCodeFile(Project, f)))
+                    foreach (ICSharpFile codeFile in testData.Item3.SelectNotNull(f => GetCodeFile(project, f)))
                     {
                         codeFile.ProcessChildren<ITypeDeclaration>(declaration =>
                             Assert.That(patterns.All(r => !r.Registration.IsSatisfiedBy(declaration.DeclaredElement)),

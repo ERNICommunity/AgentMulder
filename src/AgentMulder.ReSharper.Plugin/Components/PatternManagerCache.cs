@@ -1,5 +1,4 @@
 ﻿using System;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -43,9 +42,20 @@ namespace AgentMulder.ReSharper.Plugin.Components
             }
         }
 
+        public void Refresh()
+        {
+            foreach (var file in this.registrationsMap.Keys.ToList())
+            {
+                var list = this.ProcessSourceFile(file).ToList();
+                ((ICache)this).Merge(file, list);
+            }
+        }
+
         object ICache.Build(IPsiSourceFile sourceFile, bool isStartup)
         {
-            return ProcessSourceFile(sourceFile).ToList();
+            var registrationInfos = ProcessSourceFile(sourceFile).ToList();
+            Merge(sourceFile, registrationInfos);
+            return registrationInfos;
         }
 
         private IEnumerable<RegistrationInfo> ProcessSourceFile(IPsiSourceFile sourceFile)
@@ -62,6 +72,7 @@ namespace AgentMulder.ReSharper.Plugin.Components
 
         void ICache.Save(IProgressIndicator progress, bool enablePersistence)
         {
+            Save?.Invoke(this, EventArgs.Empty);
         }
 
         void ICache.MarkAsDirty(IPsiSourceFile sourceFile)
@@ -127,37 +138,37 @@ namespace AgentMulder.ReSharper.Plugin.Components
 
         void ICache.OnPsiChange(ITreeNode elementContainingChanges, PsiChangedElementType type)
         {
-          if (type == PsiChangedElementType.Whitespaces)
-            return;
+            var sourceFile = elementContainingChanges?.GetSourceFile();
+            if (sourceFile == null)
+            {
+                return;
+            }
 
-          if (elementContainingChanges == null)
-            return;
-
-          var sourceFile = elementContainingChanges.GetSourceFile();
-          if (sourceFile == null) return;
-
-          lock (lockObject)
-          {
-            dirtyFiles.Add(sourceFile);
-          }
+            lock (lockObject)
+            {
+                dirtyFiles.Add(sourceFile);
+            }
         }
 
         void ICache.OnDocumentChange(IPsiSourceFile sourceFile, ProjectFileDocumentCopyChange change)
         {
             MarkAsDirty(sourceFile);
-
         }
 
         void ICache.SyncUpdate(bool underTransaction)
-        {
-          lock (lockObject)
-          {
-            foreach (var psiSourceFile in dirtyFiles)
+        {     
+            lock (lockObject)
             {
-              registrationsMap.RemoveKey(psiSourceFile);
-            }
-            dirtyFiles.Clear();
-          }
+                if (HasDirtyFiles)
+                {
+                    foreach (var psiSourceFile in dirtyFiles.ToList()) // ToList to prevent InvalidOperation while enumerating
+                    {
+                        ((ICache)this).Merge(psiSourceFile, ProcessSourceFile(psiSourceFile));
+                    }
+
+                    dirtyFiles.Clear();
+                }
+            }      
         }
 
         bool ICache.UpToDate(IPsiSourceFile sourceFile)
@@ -188,5 +199,20 @@ namespace AgentMulder.ReSharper.Plugin.Components
             ProjectFileType languageType = sourceFile.LanguageType;
             return !languageType.IsNullOrUnknown() && projectFileTypeCoordinator.TryGetService(languageType) != null;
         }
+
+        public IEnumerable<RegistrationInfo> GetAllRegistrations()
+        {
+            if (HasDirtyFiles)
+            {
+                ((ICache)this).SyncUpdate(false);
+            }
+
+            lock (lockObject)
+            {
+                return registrationsMap.Values;
+            }
+        }
+
+        public event EventHandler Save;
     }
 }

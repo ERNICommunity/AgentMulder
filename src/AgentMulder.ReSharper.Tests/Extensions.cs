@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Linq;
+using AgentMulder.ReSharper.Domain.Containers;
 using JetBrains.Annotations;
+using JetBrains.ReSharper.Feature.Services.CSharp.StructuralSearch.Placeholders;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentMulder.ReSharper.Tests
@@ -12,6 +15,23 @@ namespace AgentMulder.ReSharper.Tests
             {
                 if (treeNode != null)
                     handler(treeNode);
+            }
+        }
+
+        /// <summary>
+        /// Removes the type information from the search patterns.
+        /// This is a workaround for type resolution issues in R# 2016.3.
+        /// </summary>
+        /// <param name="containerInfo">Container to strip type information from.</param>
+        internal static void RemovePlaceholderTypes(this IContainerInfo containerInfo)
+        {
+            foreach (var regPattern in containerInfo.RegistrationPatterns)
+            {
+                foreach (var placeholder in regPattern.Pattern.Placeholders.Values.OfType<ExpressionPlaceholder>())
+                {
+                    placeholder.ExpressionType = string.Empty;
+                    placeholder.ExactType = false;
+                }
             }
         }
     }

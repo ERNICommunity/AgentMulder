@@ -4,6 +4,7 @@ using System.Linq;
 using AgentMulder.ReSharper.Plugin.Components;
 using AgentMulder.ReSharper.Plugin.Highlighting;
 using JetBrains.Application.Settings;
+using JetBrains.ReSharper.Daemon.UsageChecking;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Tree;
@@ -14,24 +15,35 @@ namespace AgentMulder.ReSharper.Plugin.Daemon
     {
         private readonly IContextBoundSettingsStore settingsStore;
         private readonly IPatternManager patternManager;
+        private readonly TypeUsageManager usageManager;
 
         public ContainerRegistrationAnalysisStageProcess(IDaemonProcess process, IContextBoundSettingsStore settingsStore, IPatternManager patternManager)
         {
             this.DaemonProcess = process;
             this.settingsStore = settingsStore;
             this.patternManager = patternManager;
+            this.usageManager = new TypeUsageManager(process.GetStageProcess<CollectUsagesStageProcess>());
         }
 
         public void Execute(Action<DaemonStageResult> commiter)
         {
-            var consumer = new DefaultHighlightingConsumer(this, settingsStore);
-
-            foreach (IFile psiFile in EnumeratePsiFiles())
+            var highlights = new List<HighlightingInfo>();
+            foreach (var psiFile in EnumeratePsiFiles())
             {
+                var psiSourceFile = psiFile.GetSourceFile();
+
+                if (psiSourceFile == null)
+                {
+                    continue;
+                }
+
+                var consumer = new DefaultHighlightingConsumer(psiSourceFile);
                 ProcessFile(psiFile, consumer);
+                
+                highlights.AddRange(consumer.Highlightings);
             }
 
-            commiter(new DaemonStageResult(consumer.Highlightings));
+            commiter(new DaemonStageResult(highlights));
         }
 
         private void ProcessFile(IFile psiFile, DefaultHighlightingConsumer consumer)
@@ -47,7 +59,9 @@ namespace AgentMulder.ReSharper.Plugin.Daemon
                                                                    FirstOrDefault(c => c.Registration.IsSatisfiedBy(declaration.DeclaredElement));
                 if (registrationInfo != null)
                 {
-                    consumer.AddHighlighting(new RegisteredByContainerHighlighting(registrationInfo), declaration.GetNameDocumentRange(), psiFile);
+                    this.usageManager.MarkTypeAsUsed(declaration); // this will set the type as used
+
+                    consumer.AddHighlighting(new RegisteredByContainerHighlighting(registrationInfo),  declaration.GetNameDocumentRange());
                 }
             }
         }
