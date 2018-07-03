@@ -1,20 +1,20 @@
 using System.Collections.Generic;
-using JetBrains.ReSharper.Feature.Services.Search;
-using JetBrains.ReSharper.Feature.Services.Search.SearchRequests;
-using JetBrains.ReSharper.Features.Common.Occurences;
-using JetBrains.ReSharper.Features.Finding.Search;
+using JetBrains.ReSharper.Feature.Services.Navigation.Descriptors;
+using JetBrains.ReSharper.Feature.Services.Navigation.Requests;
+using JetBrains.ReSharper.Feature.Services.Occurrences;
+using JetBrains.ReSharper.Feature.Services.Tree.SectionsManagement;
 using JetBrains.Util;
 
 namespace AgentMulder.ReSharper.Plugin.Navigation
 {
     public class SearchRegisteredComponentsDescriptor : SearchDescriptor
     {
-        public SearchRegisteredComponentsDescriptor(SearchRequest request, ICollection<IOccurence> results)
+        public SearchRegisteredComponentsDescriptor(SearchRequest request, ICollection<IOccurrence> results)
             : base(request, results)
         {
         }
 
-        public override string GetResultsTitle(OccurenceSection section)
+        public override string GetResultsTitle(OccurrenceSection section)
         {
             string singular = "registered component";
             int totalCount = section.TotalCount;

@@ -3,9 +3,12 @@ using System.Linq;
 using AgentMulder.ReSharper.Plugin.Components;
 using JetBrains.Application;
 using JetBrains.Application.DataContext;
+using JetBrains.Application.Threading;
 using JetBrains.DocumentManagers;
 using JetBrains.DocumentModel;
+using JetBrains.DocumentModel.DataContext;
 using JetBrains.ProjectModel;
+using JetBrains.ProjectModel.DataContext;
 using JetBrains.ReSharper.Feature.Services.Navigation.ContextNavigation;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
@@ -13,8 +16,8 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentMulder.ReSharper.Plugin.Navigation
 {
-    [FeaturePart]
-    public partial class RegisteredComponentsContextSearch : IRegisteredComponentsContextSearch
+    [ShellFeaturePart]
+    public class RegisteredComponentsContextSearch : IRegisteredComponentsContextSearch
     {
         private readonly IShellLocks locks;
 
@@ -35,7 +38,7 @@ namespace AgentMulder.ReSharper.Plugin.Navigation
 
         public RegisteredComponentsSearchRequest GetRegisteredComponentsRequest(IDataContext dataContext)
         {
-            ISolution solution = dataContext.GetData(JetBrains.ProjectModel.DataContext.DataConstants.SOLUTION);
+            ISolution solution = dataContext.GetData(ProjectModelDataConstants.SOLUTION);
             if (solution == null)
             {
                 throw new InvalidOperationException("Unable to get the solution");
@@ -44,7 +47,7 @@ namespace AgentMulder.ReSharper.Plugin.Navigation
             var invokedNode = dataContext.GetSelectedTreeNode<IExpression>();
 
 
-            IDocument document = dataContext.GetData(JetBrains.IDE.DataConstants.DOCUMENT);
+            IDocument document = dataContext.GetData(DocumentModelDataConstants.DOCUMENT);
             if (document == null)
                 return null;
 

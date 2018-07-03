@@ -1,0 +1,16 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <IsPackable>False</IsPackable>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+
+    <Description>AgentMulder plugin for ReSharper</Description> 
+
+    <Authors>Igal Tabachnik</Authors>
+    <Copyright>Copyright © Igal Tabachnik, ERNI Community, 2012-$([System.DateTime]::Now.Year)</Copyright>
+    <RepositoryUrl>https://github.com/ERNICommunity/AgentMulder</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/ERNICommunity/AgentMulder/blob/develop/License.txt</PackageLicenseUrl>
+    <PackageIconUrl>https://github.com/ERNICommunity/AgentMulder/raw/develop/logo.png</PackageIconUrl>
+  </PropertyGroup>
+
+</Project>

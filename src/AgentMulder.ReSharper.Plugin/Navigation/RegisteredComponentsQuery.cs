@@ -6,7 +6,6 @@ namespace AgentMulder.ReSharper.Plugin.Navigation
 {
     public class RegisteredComponentsQuery : IRegisteredComponentsQuery
     {
-         
     }
 
     public interface IRegisteredComponentsQuery : IEnumerable<IType>

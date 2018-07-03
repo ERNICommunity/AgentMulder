@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AgentMulder.ReSharper.Domain.Registrations;
@@ -34,7 +35,7 @@ namespace AgentMulder.ReSharper.Domain.Patterns
         {
             this.pattern = pattern;
 
-            matcher = pattern.CreateMatcher();
+            matcher = this.pattern.CreateMatcher();
         }
 
         private IInvocationExpression GetMatchedExpression(ITreeNode element)

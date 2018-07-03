@@ -58,7 +58,7 @@ namespace AgentMulder.ReSharper.Domain.Utils
 
         public static INamespace GetNamespaceDeclaration(ICSharpExpression expression)
         {
-            CSharpElementFactory elementFactory = CSharpElementFactory.GetInstance(expression.GetPsiModule());
+            CSharpElementFactory elementFactory = CSharpElementFactory.GetInstance(expression);
 
             if (expression.ConstantValue.IsString())
             {
