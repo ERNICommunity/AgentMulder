@@ -1,32 +1,47 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24627.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApplication", "Test\Data\TestApplication.csproj", "{2A40748D-310D-4193-A2E8-079A53040A93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentMulder.Containers.Autofac", "AgentMulder.Containers.Autofac\AgentMulder.Containers.Autofac.csproj", "{0E0932D9-4745-4408-83DF-5527326760D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgentMulder.Containers.Autofac", "AgentMulder.Containers.Autofac\AgentMulder.Containers.Autofac.csproj", "{0E0932D9-4745-4408-83DF-5527326760D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentMulder.ReSharper.Domain", "AgentMulder.ReSharper.Domain\AgentMulder.ReSharper.Domain.csproj", "{AC2F7B7C-7DCC-45A9-8819-0F1F4541FDCC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgentMulder.ReSharper.Domain", "AgentMulder.ReSharper.Domain\AgentMulder.ReSharper.Domain.csproj", "{AC2F7B7C-7DCC-45A9-8819-0F1F4541FDCC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Containers", "Containers", "{3B332DD2-D5D8-4B58-8EA2-A64FBD08D0F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentMulder.Containers.CastleWindsor", "AgentMulder.Containers.CastleWindsor\AgentMulder.Containers.CastleWindsor.csproj", "{B1355077-57AD-4B9B-AA5F-F45722CCCAB3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgentMulder.Containers.CastleWindsor", "AgentMulder.Containers.CastleWindsor\AgentMulder.Containers.CastleWindsor.csproj", "{B1355077-57AD-4B9B-AA5F-F45722CCCAB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentMulder.Containers.Catel", "AgentMulder.Containers.Catel\AgentMulder.Containers.Catel.csproj", "{7A613EFF-5F7F-46F4-9995-3F6C0E526891}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgentMulder.Containers.Catel", "AgentMulder.Containers.Catel\AgentMulder.Containers.Catel.csproj", "{7A613EFF-5F7F-46F4-9995-3F6C0E526891}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentMulder.Containers.Ninject", "AgentMulder.Containers.Ninject\AgentMulder.Containers.Ninject.csproj", "{2F91F4DB-3D52-4AAE-8F21-B33DB11ED0AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgentMulder.Containers.Ninject", "AgentMulder.Containers.Ninject\AgentMulder.Containers.Ninject.csproj", "{2F91F4DB-3D52-4AAE-8F21-B33DB11ED0AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentMulder.Containers.SimpleInjector", "AgentMulder.Containers.SimpleInjector\AgentMulder.Containers.SimpleInjector.csproj", "{7A34DC1D-8730-48C8-AECC-717F405CA257}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgentMulder.Containers.SimpleInjector", "AgentMulder.Containers.SimpleInjector\AgentMulder.Containers.SimpleInjector.csproj", "{7A34DC1D-8730-48C8-AECC-717F405CA257}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentMulder.Containers.StructureMap", "AgentMulder.Containers.StructureMap\AgentMulder.Containers.StructureMap.csproj", "{51D960FF-093C-4D5B-BEB9-C79999056909}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgentMulder.Containers.StructureMap", "AgentMulder.Containers.StructureMap\AgentMulder.Containers.StructureMap.csproj", "{51D960FF-093C-4D5B-BEB9-C79999056909}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentMulder.Containers.Unity", "AgentMulder.Containers.Unity\AgentMulder.Containers.Unity.csproj", "{4259A34A-6F2E-4B29-BDF6-AACA854009D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgentMulder.Containers.Unity", "AgentMulder.Containers.Unity\AgentMulder.Containers.Unity.csproj", "{4259A34A-6F2E-4B29-BDF6-AACA854009D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentMulder.ReSharper.Plugin", "AgentMulder.ReSharper.Plugin\AgentMulder.ReSharper.Plugin.csproj", "{B32F33E1-E0B4-4E8A-9AA5-70A3B2CEDDDD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgentMulder.ReSharper.Plugin", "AgentMulder.ReSharper.Plugin\AgentMulder.ReSharper.Plugin.csproj", "{B32F33E1-E0B4-4E8A-9AA5-70A3B2CEDDDD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentMulder.ReSharper.Tests", "AgentMulder.ReSharper.Tests\AgentMulder.ReSharper.Tests.csproj", "{DA36BB2B-643E-4206-B7AE-2F3ABA7225B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgentMulder.ReSharper.Tests", "AgentMulder.ReSharper.Tests\AgentMulder.ReSharper.Tests.csproj", "{DA36BB2B-643E-4206-B7AE-2F3ABA7225B3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3508BC1E-600A-434B-ADFE-D533B5C86ED9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{62C5655B-3AA9-4589-B052-D4DAA4F8F924}"
+	ProjectSection(SolutionItems) = preProject
+		AgentMulder.nuspec = AgentMulder.nuspec
+		buildNuget.ps1 = buildNuget.ps1
+		Configuration.props = Configuration.props
+		Containers.props = Containers.props
+		devDeploy.ps1 = devDeploy.ps1
+		Main.props = Main.props
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgentMulder.Containers.AspNetCore", "AgentMulder.Containers.AspNetCore\AgentMulder.Containers.AspNetCore.csproj", "{5315800E-A7D4-4AD6-8090-965686B43BC6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgentMulder.Containers.LightInject", "AgentMulder.Containers.LightInject\AgentMulder.Containers.LightInject.csproj", "{9A2EA3E8-08D5-40E1-957E-6625B8AECEBD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +50,7 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2A40748D-310D-4193-A2E8-079A53040A93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A40748D-310D-4193-A2E8-079A53040A93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A40748D-310D-4193-A2E8-079A53040A93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E0932D9-4745-4408-83DF-5527326760D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0E0932D9-4745-4408-83DF-5527326760D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
@@ -76,6 +92,14 @@ Global
 		{DA36BB2B-643E-4206-B7AE-2F3ABA7225B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA36BB2B-643E-4206-B7AE-2F3ABA7225B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA36BB2B-643E-4206-B7AE-2F3ABA7225B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5315800E-A7D4-4AD6-8090-965686B43BC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5315800E-A7D4-4AD6-8090-965686B43BC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5315800E-A7D4-4AD6-8090-965686B43BC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5315800E-A7D4-4AD6-8090-965686B43BC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A2EA3E8-08D5-40E1-957E-6625B8AECEBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A2EA3E8-08D5-40E1-957E-6625B8AECEBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A2EA3E8-08D5-40E1-957E-6625B8AECEBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A2EA3E8-08D5-40E1-957E-6625B8AECEBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -90,8 +114,11 @@ Global
 		{51D960FF-093C-4D5B-BEB9-C79999056909} = {3B332DD2-D5D8-4B58-8EA2-A64FBD08D0F7}
 		{4259A34A-6F2E-4B29-BDF6-AACA854009D4} = {3B332DD2-D5D8-4B58-8EA2-A64FBD08D0F7}
 		{DA36BB2B-643E-4206-B7AE-2F3ABA7225B3} = {3508BC1E-600A-434B-ADFE-D533B5C86ED9}
+		{5315800E-A7D4-4AD6-8090-965686B43BC6} = {3B332DD2-D5D8-4B58-8EA2-A64FBD08D0F7}
+		{9A2EA3E8-08D5-40E1-957E-6625B8AECEBD} = {3B332DD2-D5D8-4B58-8EA2-A64FBD08D0F7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EA7C4D6E-CA71-47A2-BE72-578F2CA49D2F}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35;packages\Unity.2.1.505.2\lib\NET35
 	EndGlobalSection
 EndGlobal

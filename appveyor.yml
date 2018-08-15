@@ -1,0 +1,37 @@
+version: 2018.1.0.{build}
+skip_branch_with_pr: true
+image: Visual Studio 2017
+configuration: Release
+environment:
+  VERSION_MAJOR: 2018
+  VERSION_MINOR: 1
+  VERSION_BUILD: 0
+  WAVE_MIN: 12.0
+  WAVE_MAX: 13.0
+before_build:
+- ps: >-
+    cd src
+
+    nuget restore
+build:
+  verbosity: minimal
+after_build:
+- ps: >-
+    $major = $env:VERSION_MAJOR
+
+    $minor = $env:VERSION_MINOR
+
+    $build = $env:VERSION_BUILD
+
+    $min = $env:WAVE_MIN
+
+    $max = $env:WAVE_MAX
+
+
+    .\buildNuget.ps1 -version "$major.$minor.$build" -waveVersionLow "$min" -waveVersionHigh "$max" -config Release
+
+    Get-ChildItem .\nuget\*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name -DeploymentName artifact }
+test:
+  assemblies:
+    only:
+    - '**\AgentMulder.ReSharper.Tests.dll'

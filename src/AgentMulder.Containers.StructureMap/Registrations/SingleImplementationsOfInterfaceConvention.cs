@@ -47,7 +47,7 @@ namespace AgentMulder.Containers.StructureMap.Registrations
 
                 var singleInheritorChecker = new SingleImplementationChecker();
 
-                element.GetPsiServices().Finder.FindInheritors(firstInterface, element.GetSearchDomain(), singleInheritorChecker, NullProgressIndicator.Instance);
+                element.GetPsiServices().Finder.FindInheritors(firstInterface, element.GetSearchDomain(), singleInheritorChecker, NullProgressIndicator.Create());
 
                 return singleInheritorChecker.IsSingleImplementation;
             });

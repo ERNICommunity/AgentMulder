@@ -7,12 +7,11 @@ using JetBrains.Application;
 using JetBrains.Application.Progress;
 using JetBrains.Application.Threading;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Feature.Services.Occurences;
-using JetBrains.ReSharper.Feature.Services.Search;
-using JetBrains.ReSharper.Feature.Services.Search.SearchRequests;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi;
 using AgentMulder.ReSharper.Domain.Utils;
+using JetBrains.ReSharper.Feature.Services.Navigation.Requests;
+using JetBrains.ReSharper.Feature.Services.Occurrences;
 
 namespace AgentMulder.ReSharper.Plugin.Navigation
 {
@@ -29,7 +28,7 @@ namespace AgentMulder.ReSharper.Plugin.Navigation
             this.componentRegistration = componentRegistration;
         }
 
-        public override ICollection<IOccurence> Search(IProgressIndicator progressIndicator)
+        public override ICollection<IOccurrence> Search(IProgressIndicator progressIndicator)
         {
             var typeElements = new List<ITypeDeclaration>();
 
@@ -56,7 +55,7 @@ namespace AgentMulder.ReSharper.Plugin.Navigation
                     let element = typeDeclaration.DeclaredElement
                     where element != null
                     where componentRegistration.IsSatisfiedBy(element)
-                    select new DeclaredElementOccurence(element)).Cast<IOccurence>().ToList();
+                    select new DeclaredElementOccurrence(element)).Cast<IOccurrence>().ToList();
         }
 
         public override string Title
