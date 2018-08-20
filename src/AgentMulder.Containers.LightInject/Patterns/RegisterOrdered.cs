@@ -18,7 +18,7 @@ namespace AgentMulder.Containers.LightInject.Patterns
         private static readonly IStructuralSearchPattern pattern =
             new CSharpStructuralSearchPattern("$container$.RegisterOrdered($arguments$)",
                 new ExpressionPlaceholder("container", "global::LightInject.ServiceContainer", true),
-                new ArgumentPlaceholder("arguments", -1, -1));
+                new ArgumentPlaceholder("arguments", 3, 4));
 
         public RegisterOthers()
             : base(pattern)
