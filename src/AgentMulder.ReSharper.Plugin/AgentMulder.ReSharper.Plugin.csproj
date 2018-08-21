@@ -19,7 +19,7 @@
     <ProjectReference Include="..\AgentMulder.ReSharper.Domain\AgentMulder.ReSharper.Domain.csproj" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="powershell -ExecutionPolicy Bypass -file &quot;$(SolutionDir)devDeploy.ps1&quot; -config $(ConfigurationName) -version 2018.1.0 -hive AgentMulder" />
+    <Exec Command="powershell -ExecutionPolicy Bypass -file &quot;$(SolutionDir)devDeploy.ps1&quot; -config $(ConfigurationName) -version 2018.2.0 -hive AgentMulder" />
   </Target>
   
 </Project>
