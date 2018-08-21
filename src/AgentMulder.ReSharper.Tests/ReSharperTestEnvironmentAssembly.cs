@@ -14,7 +14,7 @@
 // ReSharper disable CheckNamespace
 [ZoneDefinition]
 // ReSharper disable once CheckNamespace
-public class TestEnvironmentZone : ITestsZone, IRequire<PsiFeatureTestZone>
+public class TestEnvironmentZone : ITestsEnvZone, IRequire<PsiFeatureTestZone>
 { 
 }
 
