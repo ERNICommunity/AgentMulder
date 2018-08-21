@@ -8,19 +8,17 @@ using JetBrains.ReSharper.Feature.Services.CSharp.StructuralSearch.Placeholders;
 using JetBrains.ReSharper.Feature.Services.StructuralSearch;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentMulder.Containers.LightInject.Patterns
 {
     [Export("ComponentRegistration", typeof(IRegistrationPattern))]
-    public class RegisterPropertyDependency : RegistrationPatternBase
+    public class RegisterPropertyDependency : LightInjectPatternBase
     {
         private static readonly IStructuralSearchPattern pattern =
             new CSharpStructuralSearchPattern("$container$.RegisterPropertyDependency($arguments$)",
                 new ExpressionPlaceholder("container", "global::LightInject.ServiceContainer", true),
-                new ArgumentPlaceholder("arguments", -1, -1));
-
+                new ArgumentPlaceholder("arguments", 1, 1));
 
         public RegisterPropertyDependency()
             : base(pattern)
@@ -39,47 +37,39 @@ namespace AgentMulder.Containers.LightInject.Patterns
                     yield break;
                 }
 
-                var implementationType = GetImplementationType(invocationExpression);
-                if (implementationType == null)
+                if (!invocationExpression.Arguments.Any())
                 {
                     yield break;
                 }
 
-                if (invocationExpression.TypeArguments.Count == 1)
-                {
-                    var serviceType = invocationExpression.TypeArguments.First() as IDeclaredType;
+                var expression = invocationExpression.ArgumentList.Arguments.First().Expression;
 
-                    if (serviceType == null)
+                if (expression != null && expression is ILambdaExpression lambdaExpression)
+                {
+                    var implementationTypes = GetTypesFromLambda(lambdaExpression);
+
+                    if (invocationExpression.TypeArguments.Count == 1)
                     {
-                        yield break;
+                        var serviceType = invocationExpression.TypeArguments.First() as IDeclaredType;
+
+                        if (serviceType == null)
+                        {
+                            yield break;
+                        }
+
+                        yield return new TypesBasedOnRegistration(implementationTypes.Select(_ => _.GetTypeElement()),
+                            new ServiceRegistration(invocationExpression, serviceType.GetTypeElement()));
                     }
-                    yield return new ComponentRegistration(registrationRootElement, serviceType.GetTypeElement(), implementationType);
-                }
-
-                yield return new ComponentRegistration(registrationRootElement, implementationType, implementationType);
-            }
-        }
-
-        private IClass GetImplementationType(IInvocationExpression invocationExpression)
-        {
-            if (!invocationExpression.ArgumentList.Arguments.Any())
-            {
-                return null;
-            }
-
-            if (invocationExpression.ArgumentList.Arguments.First().Value is ILambdaExpression lambdaExpression)
-            {
-                var objectCreationExpression = lambdaExpression.BodyExpression as IObjectCreationExpression;
-
-                if (objectCreationExpression?.TypeReference != null)
-                {
-                    IResolveResult resolveResult = objectCreationExpression.TypeReference.Resolve().Result;
-
-                    return resolveResult.DeclaredElement as IClass;
+                    else
+                    {
+                        foreach (var implementationType in implementationTypes)
+                        {
+                            yield return new ComponentRegistration(registrationRootElement,
+                                implementationType.GetTypeElement(), implementationType.GetTypeElement());
+                        }
+                    }
                 }
             }
-
-            return null;
         }
     }
 }
