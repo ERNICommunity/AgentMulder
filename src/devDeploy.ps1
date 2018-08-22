@@ -41,7 +41,7 @@ Copy-Item $containerPdbSourcePath $targetDir;
 $installationsRoot = "$env:LOCALAPPDATA\JetBrains\Installations";
 
 # target installation directories - we copy to all copies for he specified hive (there may be more than one)
-$installations = Get-ChildItem -Directory -Filter ("ReSharperPlatformVs15_*$hive" + "_*") -Path $installationsRoot
+$installations = Get-ChildItem -Directory -Filter ("ReSharperPlatformVs15_*$hive") -Path $installationsRoot
 
 foreach ($dir in $installations) {
 	$targetDir = "$installationsRoot\$dir"
