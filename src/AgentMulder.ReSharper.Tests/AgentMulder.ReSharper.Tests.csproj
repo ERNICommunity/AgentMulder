@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
   </PropertyGroup>
   <Import Project="..\Configuration.props" />
   <ItemGroup>
-    <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2018.1.*" />
+    <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2018.2.0-*" />
     <ProjectReference Include="..\AgentMulder.Containers.AspNetCore\AgentMulder.Containers.AspNetCore.csproj" />
     <ProjectReference Include="..\AgentMulder.Containers.Autofac\AgentMulder.Containers.Autofac.csproj" />
     <ProjectReference Include="..\AgentMulder.Containers.CastleWindsor\AgentMulder.Containers.CastleWindsor.csproj" />

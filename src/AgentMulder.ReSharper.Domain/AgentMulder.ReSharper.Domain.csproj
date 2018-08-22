@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
   </PropertyGroup>
   <Import Project="..\Configuration.props" />
   <Import Project="..\Main.props" />
   <ItemGroup>
-    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.1.*" />
+    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.2.0-*" />
   </ItemGroup>
 </Project>

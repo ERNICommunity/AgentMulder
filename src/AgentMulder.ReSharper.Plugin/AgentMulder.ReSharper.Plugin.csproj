@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
   </PropertyGroup>
   <Import Project="..\Configuration.props" />
   <Import Project="..\Main.props" />
@@ -15,11 +15,11 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="EnvDTE80" Version="8.0.3" />
-    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.1.*" />
+    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.2.0-*" />
     <ProjectReference Include="..\AgentMulder.ReSharper.Domain\AgentMulder.ReSharper.Domain.csproj" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="powershell -ExecutionPolicy Bypass -file &quot;$(SolutionDir)devDeploy.ps1&quot; -config $(ConfigurationName) -version 2018.1.0 -hive AgentMulder" />
+    <Exec Command="powershell -ExecutionPolicy Bypass -file &quot;$(SolutionDir)devDeploy.ps1&quot; -config $(ConfigurationName) -version 2018.2.0 -hive AgentMulder" />
   </Target>
   
 </Project>

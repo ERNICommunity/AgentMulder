@@ -1,17 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NET45</DefineConstants>
-    <DebugType>full</DebugType>
-    <DebugSymbols>true</DebugSymbols>
+    <TargetFramework>net461</TargetFramework>
   </PropertyGroup>
   <Import Project="..\Configuration.props" />
   <Import Project="..\Containers.props" />
   <ItemGroup>
-    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.1.*" />
+    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.2.*" />
     <ProjectReference Include="..\AgentMulder.ReSharper.Domain\AgentMulder.ReSharper.Domain.csproj" />
   </ItemGroup>
 </Project>
