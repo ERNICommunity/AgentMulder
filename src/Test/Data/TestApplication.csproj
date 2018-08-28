@@ -76,6 +76,9 @@
       <HintPath>..\..\packages\Catel.Core.4.5.4\lib\net46\Catel.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="LightInject, Version=5.1.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\LightInject.5.1.8\lib\net46\LightInject.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.EntityFrameworkCore, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.EntityFrameworkCore.1.1.0\lib\net451\Microsoft.EntityFrameworkCore.dll</HintPath>
       <Private>True</Private>
@@ -365,6 +368,19 @@
     <Compile Include="Catel\RegisterTypeIfNotYetRegisteredNonGeneric.cs" />
     <Compile Include="Catel\RegisterTypeNonGeneric.cs" />
     <Compile Include="Catel\RegisterTypeNonGenericWithArgument.cs" />
+    <Compile Include="LightInject\RegisterFallback.cs" />
+    <Compile Include="LightInject\RegisterInstanceGeneric.cs" />
+    <Compile Include="LightInject\RegisterInstanceNonGeneric.cs" />
+    <Compile Include="LightInject\RegisterOrdered.cs" />
+    <Compile Include="LightInject\RegisterMultiple.cs" />
+    <Compile Include="LightInject\RegisterConstructorDependency.cs" />
+    <Compile Include="LightInject\RegisterGenericLambda.cs" />
+    <Compile Include="LightInject\RegisterGenericLambdaFactoryValueType.cs" />
+    <Compile Include="LightInject\RegisterGenericLambdaFactory.cs" />
+    <Compile Include="LightInject\RegisterGeneric1Param.cs" />
+    <Compile Include="LightInject\RegisterTypeOf.cs" />
+    <Compile Include="LightInject\RegisterGeneric2.cs" />
+    <Compile Include="LightInject\RegisterGeneric.cs" />
     <Compile Include="Ninject\KernelTestCases\BindGenericToGeneric.cs" />
     <Compile Include="Ninject\KernelTestCases\BindGenericToNonGeneric.cs" />
     <Compile Include="Ninject\KernelTestCases\BindGenericToSelf.cs" />
@@ -394,6 +410,8 @@
     <Compile Include="Types\MyWebApiController.cs" />
     <Compile Include="Types\Static.cs" />
     <Compile Include="Types\Struct.cs" />
+    <Compile Include="Types\TakesIntAndInterface.cs" />
+    <Compile Include="Types\TakesDelegate.cs" />
     <Compile Include="Types\TestContext.cs" />
     <Compile Include="Windsor\TestCases\SkipEnumAndStructs.cs" />
     <Compile Include="Windsor\TestCases\SkipsStaticClasses.cs" />
@@ -604,7 +622,9 @@
     <None Include="Windsor\_DoesNotCompile-BrokenReference.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

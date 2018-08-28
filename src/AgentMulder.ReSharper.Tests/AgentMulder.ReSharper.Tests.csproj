@@ -10,6 +10,7 @@
     <ProjectReference Include="..\AgentMulder.Containers.Autofac\AgentMulder.Containers.Autofac.csproj" />
     <ProjectReference Include="..\AgentMulder.Containers.CastleWindsor\AgentMulder.Containers.CastleWindsor.csproj" />
     <ProjectReference Include="..\AgentMulder.Containers.Catel\AgentMulder.Containers.Catel.csproj" />
+    <ProjectReference Include="..\AgentMulder.Containers.LightInject\AgentMulder.Containers.LightInject.csproj" />
     <ProjectReference Include="..\AgentMulder.Containers.Ninject\AgentMulder.Containers.Ninject.csproj" />
     <ProjectReference Include="..\AgentMulder.Containers.SimpleInjector\AgentMulder.Containers.SimpleInjector.csproj" />
     <ProjectReference Include="..\AgentMulder.Containers.StructureMap\AgentMulder.Containers.StructureMap.csproj" />
