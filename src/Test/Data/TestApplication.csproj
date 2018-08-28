@@ -368,6 +368,8 @@
     <Compile Include="Catel\RegisterTypeIfNotYetRegisteredNonGeneric.cs" />
     <Compile Include="Catel\RegisterTypeNonGeneric.cs" />
     <Compile Include="Catel\RegisterTypeNonGenericWithArgument.cs" />
+    <Compile Include="LightInject\RegisterAssembly.cs" />
+    <Compile Include="LightInject\RegisterAssemblyWithPattern.cs" />
     <Compile Include="LightInject\RegisterFallback.cs" />
     <Compile Include="LightInject\RegisterInstanceGeneric.cs" />
     <Compile Include="LightInject\RegisterInstanceNonGeneric.cs" />
@@ -378,6 +380,8 @@
     <Compile Include="LightInject\RegisterGenericLambdaFactoryValueType.cs" />
     <Compile Include="LightInject\RegisterGenericLambdaFactory.cs" />
     <Compile Include="LightInject\RegisterGeneric1Param.cs" />
+    <Compile Include="LightInject\RegisterPropertyDependencyNonGeneric.cs" />
+    <Compile Include="LightInject\RegisterPropertyDependencyGeneric.cs" />
     <Compile Include="LightInject\RegisterTypeOf.cs" />
     <Compile Include="LightInject\RegisterGeneric2.cs" />
     <Compile Include="LightInject\RegisterGeneric.cs" />
