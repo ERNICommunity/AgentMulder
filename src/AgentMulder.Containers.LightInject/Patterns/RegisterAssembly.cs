@@ -52,14 +52,18 @@ namespace AgentMulder.Containers.LightInject.Patterns
                     yield break;
                 }
 
-                var patternToLook = Convert.ToString(value.ConstantValue.Value)
-                    .Replace("*", "")
+                var patternsToLook = Convert.ToString(value.ConstantValue.Value)
                     .Replace(".dll", "")
-                    .Replace(".exe", "");
+                    .Replace(".exe", "")
+                    .Trim('*')
+                    .Split('*');
 
                 ISolution solution = value.GetSolution();
 
-                foreach (var project in solution.GetAllProjects().Where(project => project.Name.Contains(patternToLook)))
+                var projects = solution.GetAllProjects()
+                    .Where(project => patternsToLook.All(p => project.Name.Contains(p)));
+
+                foreach (var project in projects)
                 {
                     yield return project;
                 }
