@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using EnvDTE;
 using JetBrains.ProjectModel;
@@ -23,8 +24,15 @@ namespace AgentMulder.ReSharper.Plugin.Components
         {
             Task.Run(() =>
             {
-                this.solution.GetComponent<IPatternManager>().Refresh();
-                this.solution.GetComponent<IRegisteredTypeCollector>().Refresh();
+                try
+                {
+                    this.solution.GetComponent<IPatternManager>().Refresh();
+                    this.solution.GetComponent<IRegisteredTypeCollector>().Refresh();
+                }
+                catch (ObjectDisposedException)
+                {
+                    // suppress this error, this watcher is useless
+                }
             });
         }
     }

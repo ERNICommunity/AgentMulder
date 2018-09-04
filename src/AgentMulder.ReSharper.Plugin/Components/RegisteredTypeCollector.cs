@@ -232,8 +232,11 @@ namespace AgentMulder.ReSharper.Plugin.Components
         {
             foreach (var file in matchingTypes.Keys.ToList())
             {
-                var list = CollectTypes(file);
-                ((ICache)this).Merge(file, list);
+                lock (lockObject)
+                {
+                    var list = CollectTypes(file);
+                    ((ICache)this).Merge(file, list);
+                }
             }
         }
 
