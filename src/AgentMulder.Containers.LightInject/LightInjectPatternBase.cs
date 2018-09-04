@@ -41,7 +41,7 @@ namespace AgentMulder.Containers.LightInject
                     declaredType = lambdaExpression.BodyExpression.GetExpressionType() as IDeclaredType;
                 }
 
-                if (declaredType != null && declaredType.Classify == TypeClassification.REFERENCE_TYPE)
+                if (declaredType != null && declaredType.Classify == TypeClassification.REFERENCE_TYPE && !declaredType.IsObject())
                 {
                     yield return declaredType;
                 }
