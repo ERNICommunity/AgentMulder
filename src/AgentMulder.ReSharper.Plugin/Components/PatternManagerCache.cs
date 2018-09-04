@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using JetBrains.Application.Progress;
 using JetBrains.DocumentManagers.impl;
 using JetBrains.ProjectModel;
@@ -46,8 +47,11 @@ namespace AgentMulder.ReSharper.Plugin.Components
         {
             foreach (var file in this.registrationsMap.Keys.ToList())
             {
-                var list = this.ProcessSourceFile(file).ToList();
-                ((ICache)this).Merge(file, list);
+                lock (lockObject)
+                {
+                    var list = this.ProcessSourceFile(file).ToList();
+                    ((ICache)this).Merge(file, list); 
+                }
             }
         }
 
