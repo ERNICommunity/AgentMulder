@@ -1,10 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Linq;
-using AgentMulder.ReSharper.Domain.Patterns;
 using AgentMulder.ReSharper.Domain.Registrations;
-using JetBrains.ReSharper.Feature.Services.CSharp.StructuralSearch;
-using JetBrains.ReSharper.Feature.Services.CSharp.StructuralSearch.Placeholders;
 using JetBrains.ReSharper.Feature.Services.StructuralSearch;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -12,15 +8,9 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentMulder.Containers.LightInject.Patterns
 {
-    [Export("ComponentRegistration", typeof(IRegistrationPattern))]
-    public class RegisterConstructorDependency : LightInjectPatternBase
+    public abstract class RegisterConstructorDependency : LightInjectPatternBase
     {
-        private static readonly IStructuralSearchPattern pattern =
-            new CSharpStructuralSearchPattern("$container$.RegisterConstructorDependency($arguments$)",
-                new ExpressionPlaceholder("container", "global::LightInject.ServiceContainer", true),
-                new ArgumentPlaceholder("arguments", 1, 1));
-
-        public RegisterConstructorDependency()
+        protected RegisterConstructorDependency(IStructuralSearchPattern pattern)
             : base(pattern)
         {
         }

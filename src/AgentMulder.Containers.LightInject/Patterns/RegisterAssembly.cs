@@ -1,33 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Linq;
 using AgentMulder.ReSharper.Domain.Elements.Modules;
 using AgentMulder.ReSharper.Domain.Patterns;
 using AgentMulder.ReSharper.Domain.Registrations;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Feature.Services.CSharp.StructuralSearch;
-using JetBrains.ReSharper.Feature.Services.CSharp.StructuralSearch.Placeholders;
 using JetBrains.ReSharper.Feature.Services.StructuralSearch;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentMulder.Containers.LightInject.Patterns
 {
-    [Export("ComponentRegistration", typeof(IRegistrationPattern))]
-    public sealed class RegisterAssembly : RegistrationPatternBase
+   public abstract class RegisterAssembly: RegistrationPatternBase
     {
-        private static readonly IStructuralSearchPattern pattern =
-            new CSharpStructuralSearchPattern("$container$.RegisterAssembly($assembly$)",
-                new ExpressionPlaceholder("container", "global::LightInject.ServiceContainer", true),
-                new ArgumentPlaceholder("assembly", 1, 1));
-
-
-        public RegisterAssembly()
+        protected RegisterAssembly(IStructuralSearchPattern pattern)
             : base(pattern)
         {
         }
-        
+
         private IEnumerable<IModule> GetTargetModule(IStructuralMatchResult match)
         {
             var argument = match.GetMatchedElement("assembly") as ICSharpArgument;
@@ -69,7 +59,7 @@ namespace AgentMulder.Containers.LightInject.Patterns
                 }
             }
         }
-        
+
 
         public override IEnumerable<IComponentRegistration> GetComponentRegistrations(ITreeNode registrationRootElement)
         {

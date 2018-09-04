@@ -1,10 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Linq;
-using AgentMulder.ReSharper.Domain.Patterns;
 using AgentMulder.ReSharper.Domain.Registrations;
-using JetBrains.ReSharper.Feature.Services.CSharp.StructuralSearch;
-using JetBrains.ReSharper.Feature.Services.CSharp.StructuralSearch.Placeholders;
 using JetBrains.ReSharper.Feature.Services.StructuralSearch;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -12,15 +8,9 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentMulder.Containers.LightInject.Patterns
 {
-    [Export("ComponentRegistration", typeof(IRegistrationPattern))]
-    public class Register : LightInjectPatternBase
+    public abstract class Register : LightInjectPatternBase
     {
-        private static readonly IStructuralSearchPattern pattern =
-            new CSharpStructuralSearchPattern("$container$.Register($arguments$)",
-                new ExpressionPlaceholder("container", "global::LightInject.ServiceContainer", true),
-                new ArgumentPlaceholder("arguments", 0, 4));
-
-        public Register()
+        protected Register(IStructuralSearchPattern pattern)
             : base(pattern)
         {
         }
@@ -84,11 +74,11 @@ namespace AgentMulder.Containers.LightInject.Patterns
             {
                 if (invocationExpression.Arguments.First().Value is ILambdaExpression lambdaExpression)
                 {
-                    var implementationTypes = GetTypesFromLambda(lambdaExpression);
+                    var implementationTypes = GetTypesFromLambda(lambdaExpression).ToList();
 
                     var serviceType = invocationExpression.TypeArguments.Last() as IDeclaredType;
 
-                    if (serviceType != null)
+                    if (serviceType != null && implementationTypes.Any())
                     {
                         yield return new TypesBasedOnRegistration(implementationTypes.Select(_ => _.GetTypeElement()),
                             new ServiceRegistration(invocationExpression, serviceType.GetTypeElement()));
