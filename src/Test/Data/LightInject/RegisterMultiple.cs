@@ -1,13 +1,13 @@
-// Patterns: 1
-// Matches: Foo.cs,Baz.cs
-// NotMatches: Bar.cs
+// Patterns: 2
+// Matches: Foo.cs,Baz.cs,FooBar.cs,Bar.cs
+// NotMatches: 
 
 using LightInject;
 using TestApplication.Types;
 
 namespace TestApplication.LightInject
 {
-    public class RegisterMultiple
+    public class RegisterMultiple: ICompositionRoot
     {
         public RegisterMultiple()
         {
@@ -21,6 +21,21 @@ namespace TestApplication.LightInject
                 else
                 {
                     return new Baz();
+                }
+            });
+        }
+
+        public void Compose(IServiceRegistry serviceRegistry)
+        {
+            serviceRegistry.Register<IBar>(provider =>
+            {
+                if (new object() == null)
+                {
+                    return new FooBar();
+                }
+                else
+                {
+                    return new Bar();
                 }
             });
         }

@@ -414,6 +414,8 @@
     <Compile Include="Types\MyWebApiController.cs" />
     <Compile Include="Types\Static.cs" />
     <Compile Include="Types\Struct.cs" />
+    <Compile Include="Types\TakesDelegate1.cs" />
+    <Compile Include="Types\TakesIntAndInterface1.cs" />
     <Compile Include="Types\TakesIntAndInterface.cs" />
     <Compile Include="Types\TakesDelegate.cs" />
     <Compile Include="Types\TestContext.cs" />
