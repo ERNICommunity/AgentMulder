@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using AgentMulder.ReSharper.Domain.Containers;
+using AgentMulder.ReSharper.Plugin.Utils;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
@@ -37,17 +38,7 @@ namespace AgentMulder.ReSharper.Plugin.Components
 
         private void LoadContainerInfos()
         {
-            string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            Debug.Assert(path != null, "path != null");
-            path = Path.Combine(path, "Containers");
-
-            if (!Directory.Exists(path))
-            {
-                return;
-            }
-
-            var catalog = new DirectoryCatalog(path, "*.dll");
-            var container = new CompositionContainer(catalog);
+            var container = LoadContainers.LoadContainersDll();
             IEnumerable<IContainerInfo> values = container.GetExportedValues<IContainerInfo>();
             knownContainers.AddRange(values);
         }
