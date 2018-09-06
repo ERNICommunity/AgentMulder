@@ -61,10 +61,11 @@ namespace AgentMulder.ReSharper.Plugin.Navigation
                 return null;
             }
 
-            var registration =
+            var registrations =
                 patternManager.GetRegistrationsForFile(psiSourceFile)
-                    .FirstOrDefault(r => r.Registration.RegistrationElement.Children().Contains(invokedNode));
-            if (registration == null)
+                    .Where(r => r.Registration.RegistrationElement.Children().Contains(invokedNode)).ToList();
+
+            if (!registrations.Any())
             {
                 return null;
             }
@@ -76,7 +77,7 @@ namespace AgentMulder.ReSharper.Plugin.Navigation
                 var occurences =
                     registeredTypes.Select(_ => _.Item1)
                         .Where(_ => _.DeclaredElement != null)
-                        .Where(_ => registration.Registration.IsSatisfiedBy(_.DeclaredElement))
+                        .Where(_ => registrations.Any(r => r.Registration.IsSatisfiedBy(_.DeclaredElement)))
                         .Select(_ => new DeclaredElementOccurrence(_.DeclaredElement))
                         .Cast<IOccurrence>()
                         .ToList();

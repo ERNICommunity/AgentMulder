@@ -1,26 +1,17 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Linq;
 using AgentMulder.ReSharper.Domain.Patterns;
 using AgentMulder.ReSharper.Domain.Registrations;
 using AgentMulder.ReSharper.Domain.Utils;
-using JetBrains.ReSharper.Feature.Services.CSharp.StructuralSearch;
-using JetBrains.ReSharper.Feature.Services.CSharp.StructuralSearch.Placeholders;
 using JetBrains.ReSharper.Feature.Services.StructuralSearch;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace AgentMulder.Containers.LightInject.Patterns
 {
-    [Export("ComponentRegistration", typeof(IRegistrationPattern))]
-    public class RegisterOthers : RegisterWithService
+    public abstract class RegisterOrdered : RegisterWithService
     {
-        private static readonly IStructuralSearchPattern pattern =
-            new CSharpStructuralSearchPattern("$container$.RegisterOrdered($arguments$)",
-                new ExpressionPlaceholder("container", "global::LightInject.ServiceContainer", true),
-                new ArgumentPlaceholder("arguments", 3, 4));
-
-        public RegisterOthers()
+        protected RegisterOrdered(IStructuralSearchPattern pattern)
             : base(pattern)
         {
         }
