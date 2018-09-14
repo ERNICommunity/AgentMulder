@@ -41,7 +41,10 @@ namespace AgentMulder.ReSharper.Plugin.Navigation
         private void LoadNavigationProviderFromContainers()
         {
             var container = LoadContainers.LoadContainersDll();
-            navigationProvider = container.GetExportedValues<INavigationProvider>().FirstOrDefault();
+            if (container != null)
+            {
+                navigationProvider = container.GetExportedValues<INavigationProvider>().FirstOrDefault();
+            }
         }
 
         public IEnumerable<ContextNavigation> CreateWorkflow(IDataContext dataContext)
@@ -184,7 +187,7 @@ namespace AgentMulder.ReSharper.Plugin.Navigation
 
         private bool CheckOwned(ICSharpParameterDeclaration parameterNode)
         {
-            return navigationProvider.CheckOwned(parameterNode);
+            return navigationProvider?.CheckOwned(parameterNode) ?? false; 
         }
 
         private static Func<IOccurrenceBrowserDescriptor> DescriptorBuilderForRegistrations(ISolution solution, IList<IOccurrence> occurences, string title)

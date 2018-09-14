@@ -39,8 +39,11 @@ namespace AgentMulder.ReSharper.Plugin.Components
         private void LoadContainerInfos()
         {
             var container = LoadContainers.LoadContainersDll();
-            IEnumerable<IContainerInfo> values = container.GetExportedValues<IContainerInfo>();
-            knownContainers.AddRange(values);
+            if (container != null)
+            {
+                IEnumerable<IContainerInfo> values = container.GetExportedValues<IContainerInfo>();
+                knownContainers.AddRange(values);
+            }
         }
 
         public IEnumerable<RegistrationInfo> Analyze(IPsiSourceFile sourceFile)
@@ -58,7 +61,7 @@ namespace AgentMulder.ReSharper.Plugin.Components
 
         private IContainerInfo GetMatchingContainer(IPsiSourceFile sourceFile)
         {
-            return knownContainers.FirstOrDefault(knownContainer => 
+            return knownContainers.FirstOrDefault(knownContainer =>
                 knownContainer.ContainerQualifiedNames.Any(s => wordIndex.CanContainAllSubwords(sourceFile, s)));
         }
 
