@@ -167,14 +167,19 @@ namespace AgentMulder.ReSharper.Plugin.Navigation
             }
 
             var parameterType = parameterNode.Type;
-            if (parameterType.IsGenericIEnumerable() || parameterType.IsLazy() || parameterType.IsDelegateType() || CheckOwned(parameterNode))
+            if (parameterType.IsGenericIEnumerable() || parameterType.IsLazy() || CheckOwned(parameterNode))
             {
                 // this is a little complicated
                 // since this is a IEnumerable<T> originally, we first need to perform a type substitution
                 // only after that we can access the actual generic type being used
-                // if is Lazy<T> or Func<T>
-                var sub = (parameterType as IDeclaredType).GetSubstitution();
-                parameterType = sub.Apply(sub.Domain[0]);
+                //if is Lazy<T>
+                var sub = (parameterType as IDeclaredType)?.GetSubstitution();
+                parameterType = sub?.Apply(sub.Domain[0]);
+            }
+            else if (parameterType.IsDelegateType())
+            {
+                //  if is Func<T> or delegate factory
+                parameterType = (parameterType as IDeclaredType)?.GetDelegateTypeInstance()?.GetReturnType();
             }
 
             var isSameType = parameterType.IsClassType() &&
