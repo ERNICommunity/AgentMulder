@@ -28,7 +28,7 @@ namespace AgentMulder.ReSharper.Plugin.Navigation
     public class GotoInstantiationNavigationProvider : INavigateFromHereProvider
     {
         [Import(typeof(INavigationProvider))]
-        private INavigationProvider navigationProvider;
+        private IEnumerable<INavigationProvider> navigationProviders;
 
         private const string matchingDiRegistration = "Matching DI Registrations";
         private const string matchingDiComponents = "Matching DI Components";
@@ -43,7 +43,7 @@ namespace AgentMulder.ReSharper.Plugin.Navigation
             var container = LoadContainers.LoadContainersDll();
             if (container != null)
             {
-                navigationProvider = container.GetExportedValues<INavigationProvider>().FirstOrDefault();
+                navigationProviders = container.GetExportedValues<INavigationProvider>();
             }
         }
 
@@ -192,7 +192,12 @@ namespace AgentMulder.ReSharper.Plugin.Navigation
 
         private bool CheckOwned(ICSharpParameterDeclaration parameterNode)
         {
-            return navigationProvider?.CheckOwned(parameterNode) ?? false; 
+            foreach (var navProvider in navigationProviders)
+            {
+                if (navProvider.CheckOwned(parameterNode))
+                    return true;
+            }
+            return false;
         }
 
         private static Func<IOccurrenceBrowserDescriptor> DescriptorBuilderForRegistrations(ISolution solution, IList<IOccurrence> occurences, string title)

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.Composition;
+﻿using System;
+using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Primitives;
 using AgentMulder.ReSharper.Domain.Patterns;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -10,8 +11,7 @@ namespace AgentMulder.Containers.Autofac.Patterns
     {
         public override bool CheckOwned(ICSharpParameterDeclaration paramNode)
         {
-            var result = paramNode?.Type?.GetScalarType()?.GetClrName().ShortName.ToLower() == "owned";
-            return result;
+            return string.Equals(paramNode?.Type?.GetScalarType()?.GetClrName().FullName,"Autofac.Features.OwnedInstances.Owned`1");
         }
 
     }
