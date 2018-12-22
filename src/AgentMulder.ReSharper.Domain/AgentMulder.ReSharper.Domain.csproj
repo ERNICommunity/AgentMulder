@@ -6,6 +6,6 @@
   <Import Project="..\Configuration.props" />
   <Import Project="..\Main.props" />
   <ItemGroup>
-    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.2.0-*" />
+    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.3.0-*" />
   </ItemGroup>
 </Project>

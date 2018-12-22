@@ -15,11 +15,11 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="EnvDTE80" Version="8.0.3" />
-    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.2.0-*" />
+    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.3.0-*" />
     <ProjectReference Include="..\AgentMulder.ReSharper.Domain\AgentMulder.ReSharper.Domain.csproj" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="powershell -ExecutionPolicy Bypass -file &quot;$(SolutionDir)devDeploy.ps1&quot; -config $(ConfigurationName) -version 2018.2.0 -hive AgentMulder" />
+    <Exec Command="powershell -ExecutionPolicy Bypass -file &quot;$(SolutionDir)devDeploy.ps1&quot; -config $(ConfigurationName) -version 2018.3.0 -hive AgentMulder" />
   </Target>
   
 </Project>

@@ -5,7 +5,7 @@
   </PropertyGroup>
   <Import Project="..\Configuration.props" />
   <ItemGroup>
-    <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2018.2.0-*" />
+    <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2018.3.0-*" />
     <ProjectReference Include="..\AgentMulder.Containers.AspNetCore\AgentMulder.Containers.AspNetCore.csproj" />
     <ProjectReference Include="..\AgentMulder.Containers.Autofac\AgentMulder.Containers.Autofac.csproj" />
     <ProjectReference Include="..\AgentMulder.Containers.CastleWindsor\AgentMulder.Containers.CastleWindsor.csproj" />
