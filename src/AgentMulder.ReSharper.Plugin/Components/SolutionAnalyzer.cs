@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using AgentMulder.ReSharper.Domain.Containers;
+using AgentMulder.ReSharper.Plugin.Utils;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
@@ -37,19 +38,12 @@ namespace AgentMulder.ReSharper.Plugin.Components
 
         private void LoadContainerInfos()
         {
-            string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            Debug.Assert(path != null, "path != null");
-            path = Path.Combine(path, "Containers");
-
-            if (!Directory.Exists(path))
+            var container = LoadContainers.LoadContainersDll();
+            if (container != null)
             {
-                return;
+                IEnumerable<IContainerInfo> values = container.GetExportedValues<IContainerInfo>();
+                knownContainers.AddRange(values);
             }
-
-            var catalog = new DirectoryCatalog(path, "*.dll");
-            var container = new CompositionContainer(catalog);
-            IEnumerable<IContainerInfo> values = container.GetExportedValues<IContainerInfo>();
-            knownContainers.AddRange(values);
         }
 
         public IEnumerable<RegistrationInfo> Analyze(IPsiSourceFile sourceFile)
@@ -67,7 +61,7 @@ namespace AgentMulder.ReSharper.Plugin.Components
 
         private IContainerInfo GetMatchingContainer(IPsiSourceFile sourceFile)
         {
-            return knownContainers.FirstOrDefault(knownContainer => 
+            return knownContainers.FirstOrDefault(knownContainer =>
                 knownContainer.ContainerQualifiedNames.Any(s => wordIndex.CanContainAllSubwords(sourceFile, s)));
         }
 

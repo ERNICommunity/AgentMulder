@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
+using AgentMulder.ReSharper.Domain.Patterns;
 using AgentMulder.ReSharper.Plugin.Components;
+using AgentMulder.ReSharper.Plugin.Utils;
 using JetBrains.Annotations;
 using JetBrains.Application.DataContext;
 using JetBrains.Application.Progress;
@@ -24,8 +27,25 @@ namespace AgentMulder.ReSharper.Plugin.Navigation
     [ContextNavigationProvider]
     public class GotoInstantiationNavigationProvider : INavigateFromHereProvider
     {
+        [Import(typeof(INavigationProvider))]
+        private IEnumerable<INavigationProvider> navigationProviders;
+
         private const string matchingDiRegistration = "Matching DI Registrations";
         private const string matchingDiComponents = "Matching DI Components";
+
+        public GotoInstantiationNavigationProvider()
+        {
+            LoadNavigationProviderFromContainers();
+        }
+
+        private void LoadNavigationProviderFromContainers()
+        {
+            var container = LoadContainers.LoadContainersDll();
+            if (container != null)
+            {
+                navigationProviders = container.GetExportedValues<INavigationProvider>();
+            }
+        }
 
         public IEnumerable<ContextNavigation> CreateWorkflow(IDataContext dataContext)
         {
@@ -47,7 +67,7 @@ namespace AgentMulder.ReSharper.Plugin.Navigation
             }
         }
 
-        private static IEnumerable<ContextNavigation> GetNavigateToRegistrationAction(IDataContext dataContext,
+        private IEnumerable<ContextNavigation> GetNavigateToRegistrationAction(IDataContext dataContext,
             INavigationExecutionHost navigationExecutionHost, [NotNull] IPatternManager patternManager,
             [NotNull] ISolution solution, IRegisteredTypeCollector typeCollector)
         {
@@ -78,7 +98,7 @@ namespace AgentMulder.ReSharper.Plugin.Navigation
             }
 
             var typesMatchingParameter =
-                registeredTypes.Where(typeRegistration => MatchTypes(parameterNode.Type, typeRegistration.Item1)).ToList();
+                registeredTypes.Where(typeRegistration => MatchTypes(parameterNode, typeRegistration.Item1)).ToList();
 
             if (!typesMatchingParameter.Any())
             {
@@ -138,21 +158,28 @@ namespace AgentMulder.ReSharper.Plugin.Navigation
             };
         }
 
-        private static bool MatchTypes(IType parameterType, ITypeDeclaration typeRegistration)
+        private bool MatchTypes(ICSharpParameterDeclaration parameterNode, ITypeDeclaration typeRegistration)
         {
             var registrationTypeElement = typeRegistration.DeclaredElement;
             if (registrationTypeElement == null)
             {
                 return false;
             }
-            
-            if (parameterType.IsGenericIEnumerable())
+
+            var parameterType = parameterNode.Type;
+            if (parameterType.IsGenericIEnumerable() || parameterType.IsLazy() || CheckOwned(parameterNode))
             {
                 // this is a little complicated
                 // since this is a IEnumerable<T> originally, we first need to perform a type substitution
                 // only after that we can access the actual generic type being used
-                var sub = (parameterType as IDeclaredType).GetSubstitution();
-                parameterType = sub.Apply(sub.Domain[0]);
+                //if is Lazy<T>
+                var sub = (parameterType as IDeclaredType)?.GetSubstitution();
+                parameterType = sub?.Apply(sub.Domain[0]);
+            }
+            else if (parameterType.IsDelegateType())
+            {
+                //  if is Func<T> or delegate factory
+                parameterType = (parameterType as IDeclaredType)?.GetDelegateTypeInstance()?.GetReturnType();
             }
 
             var isSameType = parameterType.IsClassType() &&
@@ -160,6 +187,17 @@ namespace AgentMulder.ReSharper.Plugin.Navigation
             var isSubType = registrationTypeElement.GetAllSuperTypes().Contains(parameterType);
 
             return isSameType || isSubType;
+        }
+
+
+        private bool CheckOwned(ICSharpParameterDeclaration parameterNode)
+        {
+            foreach (var navProvider in navigationProviders)
+            {
+                if (navProvider.CheckOwned(parameterNode))
+                    return true;
+            }
+            return false;
         }
 
         private static Func<IOccurrenceBrowserDescriptor> DescriptorBuilderForRegistrations(ISolution solution, IList<IOccurrence> occurences, string title)
