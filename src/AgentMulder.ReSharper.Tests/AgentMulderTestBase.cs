@@ -42,6 +42,9 @@ namespace AgentMulder.ReSharper.Tests
                 solutionAnalyzer.KnownContainers.Add(ContainerInfo);
 
                 var patternManager = Solution.GetComponent<IPatternManager>();
+                patternManager.Refresh();
+                var typeCollector = Solution.GetComponent<IRegisteredTypeCollector>();
+                typeCollector.Refresh();
 
                 action(patternManager);
             });

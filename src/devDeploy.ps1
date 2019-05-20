@@ -14,7 +14,7 @@ Push-Location $dir;
 [Environment]::CurrentDirectory = $PWD;
 
 #check if VS 2017 experimental hive exists
-if (!(Test-Path "$env:LOCALAPPDATA\Microsoft\VisualStudio\15.0_*$hive"))
+if (!(Test-Path "$env:LOCALAPPDATA\Microsoft\VisualStudio\16.0_*$hive"))
 {
 	echo "Visual Studio experimental hive $hive does not exist.";
 	echo "EXTENSION NOT INSTALLED";
@@ -41,7 +41,7 @@ Copy-Item $containerPdbSourcePath $targetDir;
 $installationsRoot = "$env:LOCALAPPDATA\JetBrains\Installations";
 
 # target installation directories - we copy to all copies for he specified hive (there may be more than one)
-$installations = Get-ChildItem -Directory -Filter ("ReSharperPlatformVs15_*$hive" + "*") -Path $installationsRoot
+$installations = Get-ChildItem -Directory -Filter ("ReSharperPlatformVs16_*$hive" + "*") -Path $installationsRoot
 
 foreach ($dir in $installations) {
 	$targetDir = "$installationsRoot\$dir"
