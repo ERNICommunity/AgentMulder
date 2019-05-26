@@ -10,12 +10,10 @@
     <licenseUrl>https://raw.githubusercontent.com/ERNICommunity/AgentMulder/master/License.txt</licenseUrl>
     <description>Provides navigation to and finding usages of types registered or resolved via Dependency Injection (DI) containers.</description>
     <projectUrl>https://github.com/ERNICommunity/AgentMulder</projectUrl>
-    <copyright>Copyright &#x00A9; 2012-2018 Igal Tabachnik, ERNI Community</copyright>
+    <copyright>Copyright &#x00A9; 2012-2019 Igal Tabachnik, ERNI Community</copyright>
     <iconUrl>https://raw.githubusercontent.com/ERNICommunity/AgentMulder/master/logo.png</iconUrl>
     <releaseNotes>
-&#8226; Compatibility with ReSharper 2018.3.x
-&#8226; Initial support for LightInject
-&#8226; Improvements in Autofac support (Lazy, Owned, Func)
+&#8226; Compatibility with ReSharper 2019.1
   </releaseNotes>
     <tags>resharper agent mulder agentmulder ioc di windsor castle autofac ninject structuremap unity simpleinjector aspnetcore lightinject</tags>
     <dependencies>

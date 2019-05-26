@@ -10,10 +10,7 @@ namespace AgentMulder.ReSharper.Domain.Registrations
 
         public ITypeElement Implementation { get; set; }
 
-        public ITypeElement ServiceType
-        {
-            get { return serviceType; }
-        }
+        public ITypeElement ServiceType => serviceType;
 
         public ComponentRegistration(ITreeNode registrationElement, ITypeElement serviceType, ITypeElement implementationType = null)
             : base(registrationElement)
@@ -40,15 +37,15 @@ namespace AgentMulder.ReSharper.Domain.Registrations
                 return Implementation.Equals(typeElement);
             }
 
-            return serviceType.Equals(typeElement);
+            return serviceType?.Equals(typeElement) ?? false;
         }
 
         public override string ToString()
         {
-            string displayName = Implementation != null ? Implementation.GetClrName().FullName
-                                                        : serviceType.GetClrName().FullName;
+            var displayName = Implementation != null ? Implementation?.GetClrName().FullName
+                                                        : serviceType?.GetClrName().FullName;
 
-            return string.Format("Implemented by: {0}", displayName);
+            return $"Implemented by: {displayName}";
         }
     }
 }

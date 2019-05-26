@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using JetBrains.Application.Progress;
@@ -22,13 +23,12 @@ namespace AgentMulder.ReSharper.Plugin.Components
     [SolutionComponent]
     public sealed class RegisteredTypeCollector : IRegisteredTypeCollector, ICache
     {
-        private readonly object lockObject = new object();
-        private readonly JetHashSet<IPsiSourceFile> dirtyFiles = new JetHashSet<IPsiSourceFile>();
+        private readonly ConcurrentDictionary<IPsiSourceFile, object> dirtyFiles = new ConcurrentDictionary<IPsiSourceFile, object>();
         private readonly PsiProjectFileTypeCoordinator projectFileTypeCoordinator;
         private readonly IPatternManager patternManager;
 
-        private readonly OneToListMap<IPsiSourceFile, MatchingType> matchingTypes =
-            new OneToListMap<IPsiSourceFile, MatchingType>();
+        private readonly ConcurrentDictionary<IPsiSourceFile, List<MatchingType>> matchingTypes =
+            new ConcurrentDictionary<IPsiSourceFile, List<MatchingType>>();
 
         public RegisteredTypeCollector(PsiProjectFileTypeCoordinator projectFileTypeCoordinator, IPatternManager patternManager)
         {
@@ -51,13 +51,11 @@ namespace AgentMulder.ReSharper.Plugin.Components
             // when a source file changes, types in that file are recalculated
             // when asking for matching registrations, all known types are compared to existing registrations
             // types matching a registration are returned
-            lock (lockObject)
-            {
-                var types = matchingTypes.Values.Select(
-                    _ => new Tuple<ITypeDeclaration, RegistrationInfo>(_.TypeDeclaration, _.MatchingRegistration));
+            // we take the current snapshot of values and return
+            var types = matchingTypes.Values.ToArray().SelectMany(_ => _).Select(
+                _ => new Tuple<ITypeDeclaration, RegistrationInfo>(_.TypeDeclaration, _.MatchingRegistration));
 
-                return types;
-            }
+            return types;
         }
         
         object ICache.Build(IPsiSourceFile sourceFile, bool isStartup)
@@ -78,10 +76,7 @@ namespace AgentMulder.ReSharper.Plugin.Components
 
         void ICache.MarkAsDirty(IPsiSourceFile sf)
         {
-            lock (lockObject)
-            {
-                dirtyFiles.Add(sf);
-            }
+            dirtyFiles.AddOrUpdate(sf, _ => null, (file, current) => null);
         }
 
         object ICache.Load(IProgressIndicator progress, bool enablePersistence)
@@ -102,17 +97,14 @@ namespace AgentMulder.ReSharper.Plugin.Components
 
         bool ICache.UpToDate(IPsiSourceFile sourceFile)
         {
-            lock (lockObject)
+            if (dirtyFiles.ContainsKey(sourceFile))
             {
-                if (dirtyFiles.Contains(sourceFile))
-                {
-                    return false;
-                }
+                return false;
+            }
 
-                if (!matchingTypes.ContainsKey(sourceFile))
-                {
-                    return false;
-                }
+            if (!matchingTypes.ContainsKey(sourceFile))
+            {
+                return false;
             }
 
             if (!sourceFile.Properties.ShouldBuildPsi)
@@ -133,27 +125,21 @@ namespace AgentMulder.ReSharper.Plugin.Components
                 return;
             }
 
-            lock (lockObject)
-            {
-                matchingTypes.RemoveKey(sourceFile);
-                matchingTypes.AddValueRange(sourceFile, (IEnumerable<MatchingType>)data);
+            var list = ((IEnumerable<MatchingType>)data).ToList();
+            matchingTypes.AddOrUpdate(sourceFile, file => list, (file, current) => list);
 
-                dirtyFiles.Remove(sourceFile);
-            }
+            dirtyFiles.TryRemove(sourceFile, out _);
         }
 
         void ICache.Drop(IPsiSourceFile sourceFile)
         {
             // removes the specified file from the cache
-            lock (lockObject)
+            if (!matchingTypes.ContainsKey(sourceFile))
             {
-                if (!matchingTypes.ContainsKey(sourceFile))
-                {
-                    return;
-                }
-
-                matchingTypes.RemoveKey(sourceFile);
+                return;
             }
+
+            matchingTypes.TryRemove(sourceFile, out _);
         }
 
         void ICache.OnPsiChange(ITreeNode elementContainingChanges, PsiChangedElementType type)
@@ -169,10 +155,7 @@ namespace AgentMulder.ReSharper.Plugin.Components
                 return;
             }
 
-            lock (lockObject)
-            {
-                dirtyFiles.Add(sourceFile);
-            }
+            dirtyFiles.AddOrUpdate(sourceFile, _ => null, (file, current) => null);
         }
 
         void ICache.OnDocumentChange(IPsiSourceFile sourceFile, ProjectFileDocumentCopyChange change)
@@ -188,23 +171,20 @@ namespace AgentMulder.ReSharper.Plugin.Components
                 return;
             }
 
-            lock (lockObject)
+            if (!patternManager.GetAllRegistrations().Any())
             {
-                if (!patternManager.GetAllRegistrations().Any())
+                dirtyFiles.Clear();
+                return;
+            }
+        
+            if (HasDirtyFiles)
+            {
+                foreach (var psiSourceFile in dirtyFiles.Keys.ToList()) // ToList to prevent InvalidOperation while enumerating
                 {
-                    dirtyFiles.Clear();
-                    return;
+                    ((ICache)this).Merge(psiSourceFile, CollectTypes(psiSourceFile));
                 }
-            
-                if (HasDirtyFiles)
-                {
-                    foreach (var psiSourceFile in dirtyFiles.ToList()) // ToList to prevent InvalidOperation while enumerating
-                    {
-                        ((ICache)this).Merge(psiSourceFile, CollectTypes(psiSourceFile));
-                    }
 
-                    dirtyFiles.Clear();
-                }
+                dirtyFiles.Clear();
             }
         }
 
@@ -215,7 +195,7 @@ namespace AgentMulder.ReSharper.Plugin.Components
 
         private List<MatchingType> CollectTypes(IPsiSourceFile sourceFile)
         {
-            // initializes the collection visitor and runs it agains the specified file
+            // initializes the collection visitor and runs it against the specified file
             var visitor = new RegisteredTypeCollectorVisitor(patternManager.GetAllRegistrations().ToList());
 
             var searchDomain = SearchDomainFactory.Instance.CreateSearchDomain(sourceFile);
@@ -232,11 +212,8 @@ namespace AgentMulder.ReSharper.Plugin.Components
         {
             foreach (var file in matchingTypes.Keys.ToList())
             {
-                lock (lockObject)
-                {
-                    var list = CollectTypes(file);
-                    ((ICache)this).Merge(file, list);
-                }
+                var list = CollectTypes(file);
+                ((ICache)this).Merge(file, list);
             }
         }
 

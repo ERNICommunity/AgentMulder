@@ -15,7 +15,11 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="EnvDTE80" Version="8.0.3" />
-    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.3.0-*" />
+    <PackageReference Include="JetBrains.Annotations" Version="2019.1.1" />
+    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2019.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <ProjectReference Include="..\AgentMulder.ReSharper.Domain\AgentMulder.ReSharper.Domain.csproj" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

@@ -6,7 +6,10 @@
   <Import Project="..\Configuration.props" />
   <Import Project="..\Containers.props" />
   <ItemGroup>
-    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.3.0-*" />
+    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2019.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <ProjectReference Include="..\AgentMulder.ReSharper.Domain\AgentMulder.ReSharper.Domain.csproj" />
 
   </ItemGroup>

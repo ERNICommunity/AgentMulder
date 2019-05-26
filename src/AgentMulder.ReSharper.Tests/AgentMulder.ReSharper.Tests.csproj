@@ -5,7 +5,13 @@
   </PropertyGroup>
   <Import Project="..\Configuration.props" />
   <ItemGroup>
-    <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2018.3.0-*" />
+    <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2019.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="16.1.0" />
+    <PackageReference Include="Microsoft.TestPlatform.TranslationLayer" Version="16.1.0" />
+    <PackageReference Include="NUnit" Version="2.6.4" />
     <ProjectReference Include="..\AgentMulder.Containers.AspNetCore\AgentMulder.Containers.AspNetCore.csproj" />
     <ProjectReference Include="..\AgentMulder.Containers.Autofac\AgentMulder.Containers.Autofac.csproj" />
     <ProjectReference Include="..\AgentMulder.Containers.CastleWindsor\AgentMulder.Containers.CastleWindsor.csproj" />
