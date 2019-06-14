@@ -34,3 +34,28 @@ steps:
      **\AgentMulder.*tests.dll
      !**\*TestAdapter.dll
      !**\obj\**
+
+- task: PowerShell@2
+  displayName: 'Build nuget'
+  inputs:
+    targetType: filePath
+    filePath: ./src/buildNuget.ps1
+    arguments: '-version "$(Version.Major).$(Version.Minor).$(Version.Revision)" -c Release -waveVersionLow $(Wave.Low) -waveVersionHigh $(Wave.High)'
+
+- task: GitHubRelease@0
+  displayName: 'Create GitHub release'
+  inputs:
+    gitHubConnection: 'GitHub - mareklinka'
+    repositoryName: ERNICommunity/AgentMulder
+    tagSource: manual
+    tag: 'Agent-Mulder-$(Version.Major).$(Version.Minor).$(Version.Revision)'
+    assets: 'src/nuget/*.nupkg'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Push to JetBrains Plugins'
+  inputs:
+    command: push
+    packagesToPush: 'src/nuget/*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'JetBrains Plugins'
+
