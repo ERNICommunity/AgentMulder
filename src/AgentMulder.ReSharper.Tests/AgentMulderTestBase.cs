@@ -75,20 +75,7 @@ namespace AgentMulder.ReSharper.Tests
             return cSharpFile;
         }
 
-// ReSharper disable MemberCanBePrivate.Global
-        protected IEnumerable TestCases 
-// ReSharper restore MemberCanBePrivate.Global
-        {
-            get
-            {
-                TestUtil.SetHomeDir(GetType().Assembly);
-                var testCasesDirectory = new DirectoryInfo(SolutionItemsBasePath.FullPath);
-                return testCasesDirectory.EnumerateFiles("*.cs").Select(info => new TestCaseData(info.Name)).ToList();
-            }
-        }
-
-        [TestCaseSource("TestCases")]
-        public void Test(string fileName)
+        protected void TestCore(string fileName)
         {
             RunTest(fileName, patternManager =>
             {

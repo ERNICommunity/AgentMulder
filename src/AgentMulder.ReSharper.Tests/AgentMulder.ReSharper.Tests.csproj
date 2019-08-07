@@ -5,14 +5,15 @@
   </PropertyGroup>
   <Import Project="..\Configuration.props" />
   <ItemGroup>
-    <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2019.1.2">
+    <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2019.2.0-eap06">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="16.1.1" />
-    <PackageReference Include="Microsoft.TestPlatform.TranslationLayer" Version="16.1.1" />
-    <PackageReference Include="NUnit" Version="2.6.4" />
-    <PackageReference Include="NUnitTestAdapter" Version="2.2.0" />
+    <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="16.2.0" />
+    <PackageReference Include="Microsoft.TestPlatform.TranslationLayer" Version="16.2.0" />
+    <PackageReference Include="NUnit" Version="3.10.1" />
+    <PackageReference Include="NUnit.ConsoleRunner" Version="3.10.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
     <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
     <PackageReference Include="System.Reflection.Metadata" Version="1.6.0" />
     <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
