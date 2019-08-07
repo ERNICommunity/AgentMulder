@@ -1,6 +1,6 @@
 # Agent Mulder Revival
 
-[![Build status](https://mar3ek.visualstudio.com/agent-mulder/_apis/build/status/CI)](https://mar3ek.visualstudio.com/agent-mulder/_build/latest?definitionId=19)
+[![Build Status](https://mar3ek.visualstudio.com/agent-mulder/_apis/build/status/CI?branchName=develop)](https://mar3ek.visualstudio.com/agent-mulder/_build/latest?definitionId=21&branchName=develop)
 
 Welcome to the ERNI Community fork of Agent Mulder! We love DI and we love Agent Mulder, so the news of its untimely death ware saddening to us. Fortunately for us, we managed to organize a few people interested in the project and started preparing our resurrection spells.
 
