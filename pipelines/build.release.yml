@@ -52,10 +52,7 @@ steps:
     assets: 'src/nuget/*.nupkg'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Push to JetBrains Plugins'
   inputs:
-    command: push
-    packagesToPush: 'src/nuget/*.nupkg'
-    nuGetFeedType: external
-    publishFeedCredentials: 'JetBrains Plugins'
-
+    command: 'custom'
+    custom: 'nuget'
+    arguments: 'push -s https://plugins.jetbrains.com/ -k $(NuGetSourceServerApiKey)'
