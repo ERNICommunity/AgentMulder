@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,7 +11,6 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.TestFramework;
-using JetBrains.TestFramework.Utils;
 using JetBrains.Util;
 using NUnit.Framework;
 
@@ -124,7 +122,7 @@ namespace AgentMulder.ReSharper.Tests
 
             if (count == 0)
             {
-                return Tuple.Create(0, EmptyArray<string>.Instance, EmptyArray<string>.Instance);
+                return Tuple.Create(0, Array.Empty<string>(), Array.Empty<string>());
             }
 
             match = matchesRegex.Match(code);
