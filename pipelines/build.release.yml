@@ -55,4 +55,4 @@ steps:
   inputs:
     command: 'custom'
     custom: 'nuget'
-    arguments: 'push -s https://plugins.jetbrains.com/ -k $(NuGetSourceServerApiKey)'
+    arguments: 'push src\nuget\*.nupkg -s https://plugins.jetbrains.com/ -k $(NuGetSourceServerApiKey)'
