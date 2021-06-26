@@ -21,7 +21,7 @@ namespace AgentMulder.ReSharper.Plugin.Components
     /// </summary>
     /// <remarks>This is constructed and injected automatically by the runtime.</remarks>
     [SolutionComponent]
-    public sealed class RegisteredTypeCollector : IRegisteredTypeCollector, ICache
+    public sealed class RegisteredTypeCollector : IRegisteredTypeCollector, IPsiSourceFileCache
     {
         private readonly ConcurrentDictionary<IPsiSourceFile, object> dirtyFiles = new ConcurrentDictionary<IPsiSourceFile, object>();
         private readonly PsiProjectFileTypeCoordinator projectFileTypeCoordinator;
@@ -45,7 +45,7 @@ namespace AgentMulder.ReSharper.Plugin.Components
         /// <returns>A read-only collection of type declarations and registration information.</returns>
         public IEnumerable<Tuple<ITypeDeclaration, RegistrationInfo>>  GetRegisteredTypes()
         {
-            ((ICache)this).SyncUpdate(false);
+            ((IPsiSourceFileCache)this).SyncUpdate(false);
 
             // this cache stores declared types for each source file
             // when a source file changes, types in that file are recalculated
@@ -58,7 +58,7 @@ namespace AgentMulder.ReSharper.Plugin.Components
             return types;
         }
         
-        object ICache.Build(IPsiSourceFile sourceFile, bool isStartup)
+        object IPsiSourceFileCache.Build(IPsiSourceFile sourceFile, bool isStartup)
         {
             if (sourceFile.Properties.IsGeneratedFile || sourceFile.Properties.IsNonUserFile)
             {
@@ -69,12 +69,12 @@ namespace AgentMulder.ReSharper.Plugin.Components
             // this is because to collect registered types, we first need the pattern manager cache to be completely populated
             // that will only happen later - see Refresh()
             var list = new List<MatchingType>();
-            ((ICache)this).Merge(sourceFile, list);
+            ((IPsiSourceFileCache)this).Merge(sourceFile, list);
 
             return list;
         }
 
-        void ICache.MarkAsDirty(IPsiSourceFile sf)
+        void IPsiSourceFileCache.MarkAsDirty(IPsiSourceFile sf)
         {
             dirtyFiles.AddOrUpdate(sf, _ => null, (file, current) => null);
         }
@@ -95,7 +95,7 @@ namespace AgentMulder.ReSharper.Plugin.Components
             // we do not persist this cache
         }
 
-        bool ICache.UpToDate(IPsiSourceFile sourceFile)
+        bool IPsiSourceFileCache.UpToDate(IPsiSourceFile sourceFile)
         {
             if (dirtyFiles.ContainsKey(sourceFile))
             {
@@ -116,7 +116,7 @@ namespace AgentMulder.ReSharper.Plugin.Components
             return !languageType.IsNullOrUnknown() && projectFileTypeCoordinator.TryGetService(languageType) != null;
         }
 
-        void ICache.Merge(IPsiSourceFile sourceFile, object data)
+        void IPsiSourceFileCache.Merge(IPsiSourceFile sourceFile, object data)
         {
             // merges the provided data into the cache
             // this is usually called after Build
@@ -131,7 +131,7 @@ namespace AgentMulder.ReSharper.Plugin.Components
             dirtyFiles.TryRemove(sourceFile, out _);
         }
 
-        void ICache.Drop(IPsiSourceFile sourceFile)
+        void IPsiSourceFileCache.Drop(IPsiSourceFile sourceFile)
         {
             // removes the specified file from the cache
             if (!matchingTypes.ContainsKey(sourceFile))
@@ -142,7 +142,7 @@ namespace AgentMulder.ReSharper.Plugin.Components
             matchingTypes.TryRemove(sourceFile, out _);
         }
 
-        void ICache.OnPsiChange(ITreeNode elementContainingChanges, PsiChangedElementType type)
+        void IPsiSourceFileCache.OnPsiChange(ITreeNode elementContainingChanges, PsiChangedElementType type)
         {
             if (type == PsiChangedElementType.Whitespaces)
             {
@@ -158,13 +158,13 @@ namespace AgentMulder.ReSharper.Plugin.Components
             dirtyFiles.AddOrUpdate(sourceFile, _ => null, (file, current) => null);
         }
 
-        void ICache.OnDocumentChange(IPsiSourceFile sourceFile, ProjectFileDocumentCopyChange change)
+        void IPsiSourceFileCache.OnDocumentChange(IPsiSourceFile sourceFile, ProjectFileDocumentCopyChange change)
         {
             // marks the document as dirty
-            ((ICache)this).MarkAsDirty(sourceFile);
+            ((IPsiSourceFileCache)this).MarkAsDirty(sourceFile);
         }
 
-        void ICache.SyncUpdate(bool underTransaction)
+        void IPsiSourceFileCache.SyncUpdate(bool underTransaction)
         {
             if (underTransaction)
             {
@@ -181,14 +181,14 @@ namespace AgentMulder.ReSharper.Plugin.Components
             {
                 foreach (var psiSourceFile in dirtyFiles.Keys.ToList()) // ToList to prevent InvalidOperation while enumerating
                 {
-                    ((ICache)this).Merge(psiSourceFile, CollectTypes(psiSourceFile));
+                    ((IPsiSourceFileCache)this).Merge(psiSourceFile, CollectTypes(psiSourceFile));
                 }
 
                 dirtyFiles.Clear();
             }
         }
 
-        void ICache.Dump(TextWriter writer, IPsiSourceFile sourceFile)
+        void IPsiSourceFileCache.Dump(TextWriter writer, IPsiSourceFile sourceFile)
         {
             // this is just a debugging facility
         }
@@ -213,7 +213,7 @@ namespace AgentMulder.ReSharper.Plugin.Components
             foreach (var file in matchingTypes.Keys.ToList())
             {
                 var list = CollectTypes(file);
-                ((ICache)this).Merge(file, list);
+                ((IPsiSourceFileCache)this).Merge(file, list);
             }
         }
 

@@ -14,9 +14,9 @@
     <Compile Remove="Navigation\SearchRegisteredComponentsDescriptor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="EnvDTE80" Version="8.0.3" />
-    <PackageReference Include="JetBrains.Annotations" Version="2019.1.3" />
-    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2019.3.1">
+    <PackageReference Include="EnvDTE80" Version="16.10.31320.204" />
+    <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
+    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2021.1.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

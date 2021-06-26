@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using AgentMulder.ReSharper.Plugin.Highlighting;
+using System.Linq;
 using JetBrains.Application.UI.Controls.BulbMenu.Anchors;
 using JetBrains.Application.UI.Controls.BulbMenu.Items;
 using JetBrains.ProjectModel;
@@ -7,12 +7,12 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Feature.Services.Resources;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl.DocumentMarkup;
-
-[assembly: RegisterHighlighter("Container Registration", EffectType = EffectType.GUTTER_MARK, GutterMarkType = typeof(ContainerGutterMark), Layer = 2001)]
+using JetBrains.UI.RichText;
 
 namespace AgentMulder.ReSharper.Plugin.Highlighting
 {
-    public class ContainerGutterMark : IconGutterMark
+    [RegisterHighlighter("Container Registration", EffectType = EffectType.GUTTER_MARK, GutterMarkType = typeof(ContainerGutterMark), Layer = 2001)]
+    public class ContainerGutterMark : IconGutterMarkType
     {
         public ContainerGutterMark()
             : base(AlteringFeatuThemedIcons.GeneratedMembers.Id)
@@ -33,7 +33,9 @@ namespace AgentMulder.ReSharper.Plugin.Highlighting
                 var clickable = solution?.GetComponent<IDaemon>().GetHighlighting(highlighter) as IClickableGutterHighlighting;
                 clickable?.OnClick();
 
-            }), highlighter.ToolTip, IconId, BulbMenuAnchors.PermanentBackgroundItems, true);
+            }), 
+                (highlighter.TryGetTooltip(HighlighterTooltipKind.GutterMark) ?? (RichTextBlock)"The item has no text").Lines.Aggregate((a, b) => a.Append(" ", TextStyle.Default).Append(b)),
+                IconId, BulbMenuAnchors.PermanentBackgroundItems, true);
         }
     }
 }

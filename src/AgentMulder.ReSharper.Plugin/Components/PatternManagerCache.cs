@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using JetBrains.Application.Progress;
 using JetBrains.DocumentManagers.impl;
 using JetBrains.ProjectModel;
@@ -14,7 +13,7 @@ using JetBrains.Util;
 namespace AgentMulder.ReSharper.Plugin.Components
 {
     [SolutionComponent]
-    public class PatternManagerCache : IPatternManager, ICache
+    public class PatternManagerCache : IPatternManager, IPsiSourceFileCache
     {
         private readonly object lockObject = new object();
         private readonly JetHashSet<IPsiSourceFile> dirtyFiles = new JetHashSet<IPsiSourceFile>();
@@ -32,7 +31,7 @@ namespace AgentMulder.ReSharper.Plugin.Components
 
         public IEnumerable<RegistrationInfo> GetRegistrationsForFile(IPsiSourceFile sourceFile)
         {
-            if (!((ICache)this).UpToDate(sourceFile))
+            if (!((IPsiSourceFileCache)this).UpToDate(sourceFile))
             {
                 Merge(sourceFile, ProcessSourceFile(sourceFile));
             }
@@ -50,12 +49,12 @@ namespace AgentMulder.ReSharper.Plugin.Components
                 lock (lockObject)
                 {
                     var list = this.ProcessSourceFile(file).ToList();
-                    ((ICache)this).Merge(file, list); 
+                    ((IPsiSourceFileCache)this).Merge(file, list); 
                 }
             }
         }
 
-        object ICache.Build(IPsiSourceFile sourceFile, bool isStartup)
+        object IPsiSourceFileCache.Build(IPsiSourceFile sourceFile, bool isStartup)
         {
             var registrationInfos = ProcessSourceFile(sourceFile).ToList();
             Merge(sourceFile, registrationInfos);
@@ -79,7 +78,7 @@ namespace AgentMulder.ReSharper.Plugin.Components
             Save?.Invoke(this, EventArgs.Empty);
         }
 
-        void ICache.MarkAsDirty(IPsiSourceFile sourceFile)
+        void IPsiSourceFileCache.MarkAsDirty(IPsiSourceFile sourceFile)
         {
             MarkAsDirty(sourceFile);
         }
@@ -92,7 +91,7 @@ namespace AgentMulder.ReSharper.Plugin.Components
             }
         }
 
-        void ICache.Merge(IPsiSourceFile sourceFile, object builtPart)
+        void IPsiSourceFileCache.Merge(IPsiSourceFile sourceFile, object builtPart)
         {
             if (builtPart == null)
             {
@@ -102,7 +101,7 @@ namespace AgentMulder.ReSharper.Plugin.Components
             Merge(sourceFile, (IEnumerable<RegistrationInfo>)builtPart);
         }
 
-        void ICache.Drop(IPsiSourceFile sourceFile)
+        void IPsiSourceFileCache.Drop(IPsiSourceFile sourceFile)
         {
             RemoveFileItems(sourceFile);
         }
@@ -140,7 +139,7 @@ namespace AgentMulder.ReSharper.Plugin.Components
             }
         }
 
-        void ICache.OnPsiChange(ITreeNode elementContainingChanges, PsiChangedElementType type)
+        void IPsiSourceFileCache.OnPsiChange(ITreeNode elementContainingChanges, PsiChangedElementType type)
         {
             var sourceFile = elementContainingChanges?.GetSourceFile();
             if (sourceFile == null)
@@ -154,12 +153,12 @@ namespace AgentMulder.ReSharper.Plugin.Components
             }
         }
 
-        void ICache.OnDocumentChange(IPsiSourceFile sourceFile, ProjectFileDocumentCopyChange change)
+        void IPsiSourceFileCache.OnDocumentChange(IPsiSourceFile sourceFile, ProjectFileDocumentCopyChange change)
         {
             MarkAsDirty(sourceFile);
         }
 
-        void ICache.SyncUpdate(bool underTransaction)
+        void IPsiSourceFileCache.SyncUpdate(bool underTransaction)
         {     
             lock (lockObject)
             {
@@ -167,7 +166,7 @@ namespace AgentMulder.ReSharper.Plugin.Components
                 {
                     foreach (var psiSourceFile in dirtyFiles.ToList()) // ToList to prevent InvalidOperation while enumerating
                     {
-                        ((ICache)this).Merge(psiSourceFile, ProcessSourceFile(psiSourceFile));
+                        ((IPsiSourceFileCache)this).Merge(psiSourceFile, ProcessSourceFile(psiSourceFile));
                     }
 
                     dirtyFiles.Clear();
@@ -175,7 +174,7 @@ namespace AgentMulder.ReSharper.Plugin.Components
             }      
         }
 
-        bool ICache.UpToDate(IPsiSourceFile sourceFile)
+        bool IPsiSourceFileCache.UpToDate(IPsiSourceFile sourceFile)
         {
             lock (lockObject)
             {
@@ -208,7 +207,7 @@ namespace AgentMulder.ReSharper.Plugin.Components
         {
             if (HasDirtyFiles)
             {
-                ((ICache)this).SyncUpdate(false);
+                ((IPsiSourceFileCache)this).SyncUpdate(false);
             }
 
             lock (lockObject)
