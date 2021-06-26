@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Resources.Shell;
 
 namespace AgentMulder.ReSharper.Plugin.Highlighting
 {
-    [StaticSeverityHighlighting(Severity.INFO, "GutterMarks", OverlapResolve = OverlapResolveKind.NONE, AttributeId = "Container Registration", ShowToolTipInStatusBar = false)]
+    [StaticSeverityHighlighting(Severity.INFO, typeof(HighlightingGroupIds.GutterMarks), OverlapResolve = OverlapResolveKind.NONE, AttributeId = "Container Registration", ShowToolTipInStatusBar = false)]
     public class RegisteredByContainerHighlighting : IClickableGutterHighlighting
     {
         private readonly RegistrationInfo registrationInfo;
